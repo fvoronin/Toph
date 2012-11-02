@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-
   <PropertyGroup>
-      <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\..\packages\MSBuildTasks.1.4.0.45\tools</MSBuildCommunityTasksPath>
+    <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\..\packages\MSBuildTasks.1.4.0.45\tools</MSBuildCommunityTasksPath>
   </PropertyGroup>
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
-
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -36,8 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,7 +52,31 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Common\DataAccess\Entities.cs" />
+    <Compile Include="Common\DataAccess\FileRepository.cs" />
+    <Compile Include="Common\DataAccess\IdGenerator.cs" />
+    <Compile Include="Common\DataAccess\InMemoryRepository.cs" />
+    <Compile Include="Common\DataAccess\IRepository.cs" />
+    <Compile Include="Common\DataAccess\IUnitOfWork.cs" />
+    <Compile Include="Common\DataAccess\JsonRepository.cs" />
+    <Compile Include="Common\DataAccess\XmlRepository.cs" />
+    <Compile Include="Common\DateExtensionMethods.cs" />
+    <Compile Include="Common\EnumHelper.cs" />
+    <Compile Include="Common\ExpressionHelper.cs" />
+    <Compile Include="Common\ExtensionMethods.cs" />
+    <Compile Include="Common\Ioc.cs" />
+    <Compile Include="Common\JsonHelper.cs" />
+    <Compile Include="Common\TimerHelper.cs" />
+    <Compile Include="Domain\Entities\UserProfile.cs" />
+    <Compile Include="Domain\Services\UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\_README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,19 +85,9 @@
   </Target>
   -->
   <Target Name="BeforeBuild">
-      <GitVersion LocalPath="$(MSBuildProjectDirectory)\..\">
-          <Output TaskParameter="CommitHash" PropertyName="Revision" />
-      </GitVersion>
-      <AssemblyInfo
-        CodeLanguage="CS"
-        OutputFile="..\GlobalAssemblyInfo.cs"
-        AssemblyCompany="Iroh Services, LLC"
-        AssemblyProduct="Codename: Toph"
-        AssemblyCopyright="Copyright © 2012 Iroh Services, LLC"
-        AssemblyTrademark="Iroh Services"
-        AssemblyConfiguration="$(Configuration)"
-        AssemblyVersion="0.1.0.0"
-        AssemblyFileVersion="0.1.0.0"
-        AssemblyInformationalVersion="0.1.0.$(Revision)"/>
+    <GitVersion LocalPath="$(MSBuildProjectDirectory)\..\">
+      <Output TaskParameter="CommitHash" PropertyName="Revision" />
+    </GitVersion>
+    <AssemblyInfo CodeLanguage="CS" OutputFile="..\GlobalAssemblyInfo.cs" AssemblyCompany="Iroh Services, LLC" AssemblyProduct="Codename: Toph" AssemblyCopyright="Copyright © 2012 Iroh Services, LLC" AssemblyTrademark="Iroh Services" AssemblyConfiguration="$(Configuration)" AssemblyVersion="0.1.0.0" AssemblyFileVersion="0.1.0.0" AssemblyInformationalVersion="0.1.0.$(Revision)" />
   </Target>
 </Project>

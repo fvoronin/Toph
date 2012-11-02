@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Web.WebPages.OAuth;
-using Toph.UI.Models;
 
 namespace Toph.UI
 {
@@ -26,7 +22,7 @@ namespace Toph.UI
             //    appId: "",
             //    appSecret: "");
 
-            //OAuthWebSecurity.RegisterGoogleClient();
+            OAuthWebSecurity.RegisterGoogleClient();
         }
     }
 }
