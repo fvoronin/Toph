@@ -5,7 +5,8 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
 using Toph.Common.DataAccess;
-using Toph.Domain.Services;
+using Toph.Domain.Commands;
+using Toph.Domain.Queries;
 using Toph.UI.Models;
 using WebMatrix.WebData;
 
@@ -14,14 +15,16 @@ namespace Toph.UI.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(IUnitOfWork unitOfWork, IUserService userService)
+        public AccountController(IUnitOfWork unitOfWork, IDomainQueryHandler queryHandler, IDomainCommandHandler commandHandler)
         {
             _unitOfWork = unitOfWork;
-            _userService = userService;
+            _queryHandler = queryHandler;
+            _commandHandler = commandHandler;
         }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserService _userService;
+        private readonly IDomainQueryHandler _queryHandler;
+        private readonly IDomainCommandHandler _commandHandler;
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -208,19 +211,24 @@ namespace Toph.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = _userService.GetUserProfile(model.UserName);
-                if (user == null)
+                if (_queryHandler.Execute(new UserExistsQuery {Username = model.UserName}))
+                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                else
                 {
-                    user = _userService.AddUserProfile(model.UserName);
-                    _unitOfWork.Commit();
+                    var result = _commandHandler.Execute(new AddUserCommand {Username = model.UserName});
 
-                    OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, user.Username);
-                    OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+                    if (result.AnyErrors())
+                        ModelState.AddModelErrors(result);
+                    else
+                    {
+                        _unitOfWork.Commit();
 
-                    return RedirectToLocal(returnUrl);
+                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
-
-                ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
             }
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;

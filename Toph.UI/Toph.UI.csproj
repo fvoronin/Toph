@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="Infrastructure\INHibernateSessionFactoryHelper.cs" />
     <Compile Include="Infrastructure\INHibernateUnitOfWork.cs" />
+    <Compile Include="Infrastructure\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\NHibernateRepository.cs" />
     <Compile Include="Infrastructure\StructureMapDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
