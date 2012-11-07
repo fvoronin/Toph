@@ -22,7 +22,7 @@ namespace Toph.UI
 
             IocConfig.Initialize();
 
-            WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", false);
+            WebSecurity.InitializeDatabaseConnection("toph_conn", "UserProfile", "Id", "Username", true);
         }
     }
 }

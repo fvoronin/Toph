@@ -4,6 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toph", "Toph\Toph.csproj", "{446C8478-415A-4613-859D-6ECBE87C9060}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C4EED02-56B2-40DE-B121-BCEB272CC149}"
+	ProjectSection(SolutionItems) = preProject
+		db-create.bat = db-create.bat
+		db-create.sql = db-create.sql
+		db-update.bat = db-update.bat
+		db-update.sql = db-update.sql
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toph.UI", "Toph.UI\Toph.UI.csproj", "{573FDEE4-D183-408B-B8D4-D80B4E3EAC1E}"
 EndProject

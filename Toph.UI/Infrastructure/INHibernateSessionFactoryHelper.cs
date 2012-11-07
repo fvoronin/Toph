@@ -17,7 +17,7 @@ namespace Toph.UI.Infrastructure
         public NHibernateSessionFactoryHelper()
         {
             CurrentSessionFactory = Fluently.Configure()
-                .Database(MsSqlConfiguration.MsSql2008.ConnectionString(x => x.FromConnectionStringWithKey("DefaultConnection")))
+                .Database(MsSqlConfiguration.MsSql2008.ConnectionString(x => x.FromConnectionStringWithKey("toph_conn")))
                 .Mappings(map => map.FluentMappings.AddFromAssemblyOf<UserProfileMap>())
                 .BuildSessionFactory();
         }
@@ -29,7 +29,7 @@ namespace Toph.UI.Infrastructure
     {
         public UserProfileMap()
         {
-            Id(x => x.Id, "UserId").GeneratedBy.Identity();
+            Id(x => x.Id).GeneratedBy.Identity();
             Map(x => x.Username).WithMaxLength().Not.Nullable();
         }
     }
