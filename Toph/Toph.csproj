@@ -67,13 +67,11 @@
     <Compile Include="Common\Ioc.cs" />
     <Compile Include="Common\JsonHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
-    <Compile Include="Domain\Commands\AddUserCommand.cs" />
-    <Compile Include="Domain\Commands\DomainCommandHandler.cs" />
-    <Compile Include="Domain\Commands\DomainCommandResult.cs" />
     <Compile Include="Domain\Entities\UserProfile.cs" />
-    <Compile Include="Domain\Queries\DomainQueryHandler.cs" />
-    <Compile Include="Domain\Queries\PaginatedResult.cs" />
-    <Compile Include="Domain\Queries\UserExistsQuery.cs" />
+    <Compile Include="Domain\PaginatedResult.cs" />
+    <Compile Include="Domain\Services\ServiceResult.cs" />
+    <Compile Include="Domain\Services\UserService.cs" />
+    <Compile Include="Domain\Services\ValidationFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

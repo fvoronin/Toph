@@ -5,8 +5,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
 using Toph.Common.DataAccess;
-using Toph.Domain.Commands;
-using Toph.Domain.Queries;
+using Toph.Domain.Services;
 using Toph.UI.Models;
 using WebMatrix.WebData;
 
@@ -15,16 +14,14 @@ namespace Toph.UI.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(IUnitOfWork unitOfWork, IDomainQueryHandler queryHandler, IDomainCommandHandler commandHandler)
+        public AccountController(IUnitOfWork unitOfWork, IUserService userService)
         {
             _unitOfWork = unitOfWork;
-            _queryHandler = queryHandler;
-            _commandHandler = commandHandler;
+            _userService = userService;
         }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDomainQueryHandler _queryHandler;
-        private readonly IDomainCommandHandler _commandHandler;
+        private readonly IUserService _userService;
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -36,7 +33,7 @@ namespace Toph.UI.Controllers
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid && WebSecurity.Login(model.Username, model.Password, persistCookie: model.RememberMe))
                 return RedirectToLocal(returnUrl);
 
             // If we got this far, something failed, redisplay form
@@ -66,8 +63,8 @@ namespace Toph.UI.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
+                    WebSecurity.CreateUserAndAccount(model.Username, model.Password);
+                    WebSecurity.Login(model.Username, model.Password);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
@@ -197,7 +194,7 @@ namespace Toph.UI.Controllers
             var loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
-            return View("ExternalLoginConfirmation", new RegisterExternalLoginModel {UserName = result.UserName, ExternalLoginData = loginData});
+            return View("ExternalLoginConfirmation", new RegisterExternalLoginModel {Username = result.UserName, ExternalLoginData = loginData});
         }
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
@@ -211,23 +208,18 @@ namespace Toph.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_queryHandler.Execute(new UserExistsQuery {Username = model.UserName}))
-                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                var serviceResult = _userService.Execute(new AddUserCommand {Username = model.Username});
+
+                if (serviceResult.AnyErrors())
+                    ModelState.AddModelErrors(serviceResult);
                 else
                 {
-                    var result = _commandHandler.Execute(new AddUserCommand {Username = model.UserName});
+                    _unitOfWork.Commit();
 
-                    if (result.AnyErrors())
-                        ModelState.AddModelErrors(result);
-                    else
-                    {
-                        _unitOfWork.Commit();
+                    OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Username);
+                    OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
-                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
-
-                        return RedirectToLocal(returnUrl);
-                    }
+                    return RedirectToLocal(returnUrl);
                 }
             }
 

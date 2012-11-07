@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Toph.Common;
 
-namespace Toph.Domain.Queries
+namespace Toph.Domain
 {
     public class PaginatedResult<T>
     {
