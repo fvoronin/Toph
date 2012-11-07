@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Toph.Common;
 
@@ -17,7 +18,7 @@ namespace Toph.Domain
 
         public DomainCommandResult(string key, string error)
         {
-            Add(key, error);
+            Add(new DomainCommandError(key, error));
         }
 
         private readonly IList<DomainCommandError> _errors = new List<DomainCommandError>();
@@ -27,15 +28,9 @@ namespace Toph.Domain
             get { return _errors.AsReadOnly(); }
         }
 
-        public DomainCommandResult Add(string error)
+        public void Add(DomainCommandError error)
         {
-            return Add("", error);
-        }
-
-        public DomainCommandResult Add(string key, string error)
-        {
-            _errors.Add(new DomainCommandError(key, error));
-            return this;
+            _errors.Add(error);
         }
 
         public bool AnyErrors()
@@ -59,5 +54,39 @@ namespace Toph.Domain
 
         public string Key { get; private set; }
         public string Error { get; private set; }
+    }
+
+    public static class DomainCommandResultExtensions
+    {
+        public static T Add<T>(this T result, string error) where T : DomainCommandResult
+        {
+            result.Add(new DomainCommandError("", error));
+
+            return result;
+        }
+
+        public static T Add<T>(this T result, string key, string error) where T : DomainCommandResult
+        {
+            result.Add(new DomainCommandError(key, error));
+
+            return result;
+        }
+
+        public static T Add<T>(this T result, IEnumerable<ValidationResult> validationResults) where T : DomainCommandResult
+        {
+            foreach (var validationResult in validationResults)
+                result.Add(validationResult.MemberNames.Join(", "), validationResult.ErrorMessage);
+
+            return result;
+        }
+
+        public static T AddValidationErrors<T>(this T result, object instance) where T : DomainCommandResult
+        {
+            var validationResults = new List<ValidationResult>();
+
+            Validator.TryValidateObject(instance, new ValidationContext(instance), validationResults, true);
+
+            return result.Add(validationResults);
+        }
     }
 }
