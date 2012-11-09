@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Toph.Common;
 using WebMatrix.WebData;
 
 namespace Toph.UI
@@ -12,6 +15,15 @@ namespace Toph.UI
     {
         protected void Application_Start()
         {
+            var version = Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
+
+            Application["version"] = version;
+            Application["versionUrl"] = "https://github.com/rtennys/Toph/commit/{0}".F(version.Split('.').Last());
+            Application["name"] = "Toph";
+
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
