@@ -67,6 +67,11 @@
     <Compile Include="Common\Ioc.cs" />
     <Compile Include="Common\JsonHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
+    <Compile Include="Domain\Entities\Customer.cs" />
+    <Compile Include="Domain\Entities\Engagement.cs" />
+    <Compile Include="Domain\Entities\EntityBase.cs" />
+    <Compile Include="Domain\Entities\Invoice.cs" />
+    <Compile Include="Domain\Entities\TimeEntry.cs" />
     <Compile Include="Domain\Entities\UserProfile.cs" />
     <Compile Include="Domain\PaginatedResult.cs" />
     <Compile Include="Domain\Services\ServiceResult.cs" />

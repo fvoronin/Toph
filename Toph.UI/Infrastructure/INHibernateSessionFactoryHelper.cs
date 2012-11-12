@@ -1,8 +1,13 @@
 using System;
+using FluentNHibernate;
+using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using FluentNHibernate.Mapping;
+using FluentNHibernate.Conventions;
+using FluentNHibernate.Conventions.Inspections;
+using FluentNHibernate.Conventions.Instances;
 using NHibernate;
+using Toph.Common;
 using Toph.Domain.Entities;
 
 namespace Toph.UI.Infrastructure
@@ -14,31 +19,57 @@ namespace Toph.UI.Infrastructure
 
     public class NHibernateSessionFactoryHelper : INHibernateSessionFactoryHelper
     {
-        public NHibernateSessionFactoryHelper()
+        private ISessionFactory _currentSessionFactory;
+
+        public ISessionFactory CurrentSessionFactory
         {
-            CurrentSessionFactory = Fluently.Configure()
+            get { return _currentSessionFactory ?? (_currentSessionFactory = CreateSessionFactory()); }
+        }
+
+        private static ISessionFactory CreateSessionFactory()
+        {
+            var entityBaseType = typeof(EntityBase);
+
+            var autoPersistenceModel = AutoMap
+                .AssemblyOf<EntityBase>()
+                .Where(entityBaseType.IsAssignableFrom)
+                .Conventions.Add<MyIdConvention>()
+                .Conventions.Add<MyForeignKeyConvention>()
+                .Conventions.Add<MyCollectionConvention>()
+                .Override<UserProfile>(m => m.HasMany(x => x.Customers).KeyColumn("OwnerId"))
+                .Override<InvoiceLineItem>(m => m.HasMany(x => x.TimeEntries).KeyColumn("InvoiceLineItemId"));
+
+            return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(x => x.FromConnectionStringWithKey("toph_conn")))
-                .Mappings(map => map.FluentMappings.AddFromAssemblyOf<UserProfileMap>())
+                .Mappings(map => map.AutoMappings.Add(autoPersistenceModel))
                 .BuildSessionFactory();
         }
 
-        public ISessionFactory CurrentSessionFactory { get; private set; }
-    }
-
-    public class UserProfileMap : ClassMap<UserProfile>
-    {
-        public UserProfileMap()
+        public class MyIdConvention : IIdConvention
         {
-            Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.Username).WithMaxLength().Not.Nullable();
+            public void Apply(IIdentityInstance instance)
+            {
+                instance.CustomType<int>();
+                instance.GeneratedBy.Identity();
+            }
         }
-    }
 
-    public static class PropertyPartExtensions
-    {
-        public static PropertyPart WithMaxLength(this PropertyPart map)
+        public class MyForeignKeyConvention : ForeignKeyConvention
         {
-            return map.Length(10000);
+            protected override string GetKeyName(Member property, Type type)
+            {
+                return "{0}Id".F(property != null ? property.Name : type.Name);
+            }
+        }
+
+        public class MyCollectionConvention : ICollectionConvention
+        {
+            public void Apply(ICollectionInstance instance)
+            {
+                instance.Access.CamelCaseField(CamelCasePrefix.Underscore);
+                instance.Cascade.AllDeleteOrphan();
+                instance.Inverse();
+            }
         }
     }
 }
