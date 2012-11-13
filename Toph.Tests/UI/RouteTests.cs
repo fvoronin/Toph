@@ -32,6 +32,13 @@ namespace Toph.Tests.UI
         }
 
         [Test]
+        public void UserIndex()
+        {
+            Test("~/johndoe", "user", "index", new {username = "johndoe"});
+            Test("~/johndoe", "user", "index", null, new {username = "johndoe"});
+        }
+
+        [Test]
         public void AccountLogin()
         {
             Test("~/account/login", "account", "login");

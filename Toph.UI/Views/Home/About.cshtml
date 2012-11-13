@@ -4,31 +4,64 @@
 
 <hgroup class="title">
     <h1>@ViewBag.Title.</h1>
-    <h2>@ViewBag.Message</h2>
+    <h2>Your app description page.</h2>
 </hgroup>
 
-<article>
-    <p>
-        Use this area to provide additional information.
-    </p>
+<section class="clear-fix">
+    <article>
+        <p>Use this area to provide additional information.</p>
+        <p>Use this area to provide additional information.</p>
+        <p>Use this area to provide additional information.</p>
+    </article>
 
-    <p>
-        Use this area to provide additional information.
-    </p>
+    <aside>
+        <h3>Aside Title</h3>
+        <p>Use this area to provide additional information.</p>
+        <ul>
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("About", "About", "Home")</li>
+        </ul>
+    </aside>
+</section>
 
+<section class="contact">
+    <header>
+        <h3>Phone</h3>
+    </header>
     <p>
-        Use this area to provide additional information.
+        <span class="label">Main:</span>
+        <span>425.555.0100</span>
     </p>
-</article>
+    <p>
+        <span class="label">After Hours:</span>
+        <span>425.555.0199</span>
+    </p>
+</section>
 
-<aside>
-    <h3>Aside Title</h3>
+<section class="contact">
+    <header>
+        <h3>Email</h3>
+    </header>
     <p>
-        Use this area to provide additional information.
+        <span class="label">Support:</span>
+        <span><a href="mailto:Support@example.com">Support@example.com</a></span>
     </p>
-    <ul>
-        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-        <li>@Html.ActionLink("About", "About", "Home")</li>
-        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-    </ul>
-</aside>
+    <p>
+        <span class="label">Marketing:</span>
+        <span><a href="mailto:Marketing@example.com">Marketing@example.com</a></span>
+    </p>
+    <p>
+        <span class="label">General:</span>
+        <span><a href="mailto:General@example.com">General@example.com</a></span>
+    </p>
+</section>
+
+<section class="contact">
+    <header>
+        <h3>Address</h3>
+    </header>
+    <p>
+        One Microsoft Way<br />
+        Redmond, WA 98052-6399
+    </p>
+</section>

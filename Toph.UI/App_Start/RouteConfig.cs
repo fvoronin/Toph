@@ -14,7 +14,9 @@ namespace Toph.UI
             routes.MapRouteLowercase("home", "", new {controller = "home", action = "index"});
             routes.MapRouteLowercase("about", "about", new {controller = "home", action = "about"});
 
-            routes.MapRouteLowercase("Default", "{controller}/{action}/{id}", new {controller = "Home", action = "Index", id = UrlParameter.Optional});
+            routes.MapRouteLowercase("account", "account/{action}/{id}", new {controller = "account", action = "index", id = UrlParameter.Optional});
+
+            routes.MapRouteLowercase("user home", "{username}", new {controller = "user", action = "index"});
         }
     }
 }
