@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetOpenAuth.AspNet.Clients;
 using Microsoft.Web.WebPages.OAuth;
 
 namespace Toph.UI
@@ -22,7 +23,9 @@ namespace Toph.UI
             //    appId: "",
             //    appSecret: "");
 
+            OAuthWebSecurity.RegisterClient(new OpenIdClient("MyOpenId", "https://myopenid.com/"), "MyOpenID", null);
             OAuthWebSecurity.RegisterGoogleClient();
+            OAuthWebSecurity.RegisterYahooClient();
         }
     }
 }
