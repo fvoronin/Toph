@@ -2,66 +2,45 @@
     ViewBag.Title = "About";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Your app description page.</h2>
-</hgroup>
+@section featured {
+    <hgroup class="title">
+        <h1>@ViewBag.Title.</h1>
+        <h2>The best there is at whatever this is.</h2>
+    </hgroup>
+    <p>
+        This application is meant not only to help organize my consulting gigs, but also give me a public
+        application and codebase I can point to. I'm mainly thinking of potential clients who want to see
+        some of my work and other developers when I'm trying to explain a pattern or best practice.
+    </p>
+    <p>
+        To learn more about it, read about it on
+        <a href="http://www.robtennyson.us/?tag=/toph" title="Rob Tennyson" target="_blank">my blog</a>
+        or take a look at
+        <a href="https://github.com/rtennys/Toph" title="Toph on GitHub" target="_blank">the code</a>.
+    </p>
+}
 
-<section class="clear-fix">
-    <article>
-        <p>Use this area to provide additional information.</p>
-        <p>Use this area to provide additional information.</p>
-        <p>Use this area to provide additional information.</p>
-    </article>
+<article>
+    <p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.</p>
+    <p>Cum horribilem walking dead resurgere de crazed sepulcris creaturis, zombie sicut de grave feeding iride et serpens. Pestilentia, shaun ofthe dead scythe animated corpses ipsa screams. Pestilentia est plague haec decaying ambulabat mortuos. Sicut zeder apathetic malus voodoo. Aenean a dolor plan et terror soulless vulnerum contagium accedunt, mortui iam vivam unlife. Qui tardius moveri, brid eof reanimator sed in magna copia sint terribiles undeath legionis. Alii missing oculis aliorum sicut serpere crabs nostram. Putridi braindead odores kill and infect, aere implent left four dead.</p>
 
-    <aside>
-        <h3>Aside Title</h3>
-        <p>Use this area to provide additional information.</p>
-        <ul>
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-            <li>@Html.ActionLink("About", "About", "Home")</li>
-        </ul>
-    </aside>
-</section>
+    <h3>Contact Info</h3>
 
-<section class="contact">
-    <header>
-        <h3>Phone</h3>
-    </header>
+    <p><strong>Email:</strong> <a href="mailto:support@example.com">support@example.com</a></p>
     <p>
-        <span class="label">Main:</span>
-        <span>425.555.0100</span>
+        I’m very good about reading and returning email, and generally prefer it over the phone.
+        If you’d like to talk though, just send me your number and the best time to call.
     </p>
-    <p>
-        <span class="label">After Hours:</span>
-        <span>425.555.0199</span>
-    </p>
-</section>
+    <p>I look forward to hearing from you.</p>
+</article>
 
-<section class="contact">
-    <header>
-        <h3>Email</h3>
-    </header>
-    <p>
-        <span class="label">Support:</span>
-        <span><a href="mailto:Support@example.com">Support@example.com</a></span>
-    </p>
-    <p>
-        <span class="label">Marketing:</span>
-        <span><a href="mailto:Marketing@example.com">Marketing@example.com</a></span>
-    </p>
-    <p>
-        <span class="label">General:</span>
-        <span><a href="mailto:General@example.com">General@example.com</a></span>
-    </p>
-</section>
-
-<section class="contact">
-    <header>
-        <h3>Address</h3>
-    </header>
-    <p>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399
-    </p>
-</section>
+<aside>
+    <h3>Aside</h3>
+    <p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro.</p>
+    <p>De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia?</p>
+    <p>De apocalypsi gorger omero undead survivor dictum mauris.</p>
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+    </ul>
+</aside>

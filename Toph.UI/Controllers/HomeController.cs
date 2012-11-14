@@ -7,6 +7,9 @@ namespace Toph.UI.Controllers
     {
         public ActionResult Index()
         {
+            if (!Request.IsAuthenticated)
+                return View("IndexUnauthenticated");
+
             return View();
         }
 

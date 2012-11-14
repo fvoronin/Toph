@@ -305,6 +305,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Home\IndexUnauthenticated.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
