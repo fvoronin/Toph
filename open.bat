@@ -1,1 +1,1 @@
-Toph.sln
+start Toph.sln
