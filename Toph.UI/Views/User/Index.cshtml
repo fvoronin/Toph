@@ -5,7 +5,7 @@
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title</h1>
+    <h1>@Html.ActionLink(Model.Username, "Index", "User")</h1>
 </hgroup>
 
 @if (Model.ShowManageLink)

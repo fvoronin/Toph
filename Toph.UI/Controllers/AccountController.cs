@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 namespace Toph.UI.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : AppController
     {
         public AccountController(IUnitOfWork unitOfWork, IUserService userService)
         {

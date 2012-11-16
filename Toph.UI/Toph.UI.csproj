@@ -174,6 +174,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -185,6 +187,7 @@
     <Compile Include="Infrastructure\NHibernateRepository.cs" />
     <Compile Include="Infrastructure\StructureMapDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -306,6 +309,8 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Home\IndexUnauthenticated.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\User\Add.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

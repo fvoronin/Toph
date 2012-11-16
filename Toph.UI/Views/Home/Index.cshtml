@@ -2,4 +2,10 @@
     ViewBag.Title = "Home Page";
 }
 
-<p>Coming soon.</p>
+<h3>Time Entries</h3>
+
+<p>
+    @Html.ActionLink("add", "Add", "User", new {username = User.Identity.Name}, null)
+</p>
+
+<div>loading...</div>
