@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -60,12 +61,20 @@ namespace Toph.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.Username, model.Password);
-                    WebSecurity.Login(model.Username, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    var serviceResult = _userService.Execute(new AddUserCommand {Username = model.Username});
+
+                    if (serviceResult.AnyErrors())
+                        ModelState.AddModelErrors(serviceResult);
+                    else
+                    {
+                        _unitOfWork.Commit();
+
+                        WebSecurity.CreateAccount(model.Username, model.Password);
+                        WebSecurity.Login(model.Username, model.Password);
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -73,7 +82,6 @@ namespace Toph.UI.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -191,10 +199,16 @@ namespace Toph.UI.Controllers
             }
 
             // User is new, ask for their desired membership name
-            var loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
-            return View("ExternalLoginConfirmation", new RegisterExternalLoginModel {Username = result.UserName, ExternalLoginData = loginData});
+
+            var model = new RegisterExternalLoginModel
+                        {
+                            Username = ParseUsername(result.UserName),
+                            ExternalLoginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId)
+                        };
+
+            return View("ExternalLoginConfirmation", model);
         }
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
@@ -252,11 +266,11 @@ namespace Toph.UI.Controllers
                 var clientData = OAuthWebSecurity.GetOAuthClientData(account.Provider);
 
                 externalLogins.Add(new ExternalLogin
-                {
-                    Provider = account.Provider,
-                    ProviderDisplayName = clientData.DisplayName,
-                    ProviderUserId = account.ProviderUserId,
-                });
+                                   {
+                                       Provider = account.Provider,
+                                       ProviderDisplayName = clientData.DisplayName,
+                                       ProviderUserId = account.ProviderUserId,
+                                   });
             }
 
             ViewBag.ShowRemoveButton = externalLogins.Count > 1 || OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
@@ -271,31 +285,17 @@ namespace Toph.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public enum ManageMessageId
+        private string ParseUsername(string username)
         {
-            ChangePasswordSuccess,
-            SetPasswordSuccess,
-            RemoveLoginSuccess,
+            if (string.IsNullOrWhiteSpace(username)) return "";
+
+            if (username.IndexOf('@') >= 0) username = username.Substring(0, username.IndexOf('@'));
+            if (username.IndexOf('.') >= 0) username = username.Substring(0, username.IndexOf('.'));
+
+            return Regex.Replace(username, "[^A-Za-z0-9-]", "-");
         }
 
-        internal class ExternalLoginResult : ActionResult
-        {
-            public ExternalLoginResult(string provider, string returnUrl)
-            {
-                Provider = provider;
-                ReturnUrl = returnUrl;
-            }
-
-            public string Provider { get; private set; }
-            public string ReturnUrl { get; private set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
-            }
-        }
-
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
+        private string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for
             // a full list of status codes.
@@ -330,6 +330,30 @@ namespace Toph.UI.Controllers
 
                 default:
                     return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+            }
+        }
+
+        public enum ManageMessageId
+        {
+            ChangePasswordSuccess,
+            SetPasswordSuccess,
+            RemoveLoginSuccess,
+        }
+
+        internal class ExternalLoginResult : ActionResult
+        {
+            public ExternalLoginResult(string provider, string returnUrl)
+            {
+                Provider = provider;
+                ReturnUrl = returnUrl;
+            }
+
+            public string Provider { get; private set; }
+            public string ReturnUrl { get; private set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
             }
         }
     }

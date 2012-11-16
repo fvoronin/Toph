@@ -40,7 +40,7 @@ namespace Toph.Domain.Services
 
     public class AddUserCommand
     {
-        [Required, RegularExpression(@"(\S)+", ErrorMessage = "No spaces allowed")]
+        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Username may only contain alphanumeric characters or dashes and cannot begin with a dash or number")]
         public string Username { get; set; }
     }
 }

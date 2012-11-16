@@ -1,16 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Toph.Domain.Services;
 
 namespace Toph.UI.Models
 {
-    public class RegisterExternalLoginModel
-    {
-        [Required]
-        public string Username { get; set; }
-
-        public string ExternalLoginData { get; set; }
-    }
-
     public class LocalPasswordModel
     {
         [Required, Display(Name = "Current password"), DataType(DataType.Password)]
@@ -35,16 +28,18 @@ namespace Toph.UI.Models
         public bool RememberMe { get; set; }
     }
 
-    public class RegisterModel
+    public class RegisterModel : AddUserCommand
     {
-        [Required]
-        public string Username { get; set; }
-
         [Required, Display(Name = "Password"), StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6), DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Display(Name = "Confirm password"), Compare("Password", ErrorMessage = "The password and confirmation password do not match."), DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class RegisterExternalLoginModel : AddUserCommand
+    {
+        public string ExternalLoginData { get; set; }
     }
 
     public class ExternalLogin
