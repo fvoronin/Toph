@@ -11,14 +11,10 @@ namespace Toph.UI
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRouteLowercase("home", "", new {controller = "home", action = "index"});
-            routes.MapRouteLowercase("about", "about", new {controller = "home", action = "about"});
+            routes.MapRouteLowercase("home index", "", new {controller = "home", action = "index"});
+            routes.MapRouteLowercase("home about", "about", new {controller = "home", action = "about"});
 
-            routes.MapRouteLowercase("account", "account/{action}/{id}", new {controller = "account", action = "index", id = UrlParameter.Optional});
-
-            routes.MapRouteLowercase("user", "{username}/{action}", new {controller = "user", action = "index"}, new {action = "^(index|add)$"});
-
-            routes.MapRouteLowercase("customer", "{username}/{customer}/{action}", new {controller = "customer", action = "index"});
+            routes.MapRouteLowercase("default", "{controller}/{action}/{id}", new {action = "index", id = UrlParameter.Optional});
         }
     }
 }

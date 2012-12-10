@@ -2,6 +2,19 @@
     ViewBag.Title = "Home";
 }
 
-<h3>My Invoices</h3>
+<h3>Open Invoices</h3>
 
-<div>Loading...</div>
+<p>
+    <a href="#add" id="addInvoiceButton">Add</a>
+</p>
+
+<div id="invoicesContainer">Loading...</div>
+
+<p>
+    @Html.ActionLink("all invoices", "Index", "Invoices")
+</p>
+
+@section scripts
+{
+    @Scripts.Render("~/Scripts/Site.Home.Index.js")
+}

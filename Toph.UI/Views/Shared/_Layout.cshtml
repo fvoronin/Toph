@@ -56,7 +56,16 @@
             </div>
         </footer>
 
-        @Scripts.Render("~/bundles/jquery")
+        @* hack to preload the spinning gif *@
+        <div class="loading" style="position: absolute; top: -100px; width: 1px;"></div>
+
+        @Scripts.Render("~/bundles/common")
+
+        <script type="text/javascript">
+            app.webroot = '@Url.Content("~/")';
+        </script>
+
         @RenderSection("scripts", required: false)
+
     </body>
 </html>
