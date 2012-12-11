@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Toph.Common;
 
 namespace Toph.Domain.Entities
@@ -10,45 +11,28 @@ namespace Toph.Domain.Entities
         {
         }
 
-        internal Invoice(Customer customer, DateTimeOffset invoiceDate)
+        internal Invoice(UserProfile user, DateTimeOffset invoiceDate, string invoiceNumber)
         {
-            Customer = customer;
+            UserProfile = user;
             InvoiceDate = invoiceDate;
+            InvoiceNumber = invoiceNumber;
         }
 
         private readonly IList<InvoiceLineItem> _lineItems = new List<InvoiceLineItem>();
 
-        public virtual Customer Customer { get; protected set; }
+        public virtual UserProfile UserProfile { get; protected set; }
         public virtual DateTimeOffset InvoiceDate { get; protected set; }
+        public virtual string InvoiceNumber { get; protected set; }
+        public virtual InvoiceCustomer InvoiceCustomer { get; set; }
 
         public virtual IReadOnlyList<InvoiceLineItem> LineItems
         {
             get { return _lineItems.AsReadOnly(); }
         }
-    }
 
-    public class InvoiceLineItem : EntityBase
-    {
-        protected InvoiceLineItem()
+        public virtual double GetTotal()
         {
-        }
-
-        internal InvoiceLineItem(Invoice invoice)
-        {
-            Invoice = invoice;
-        }
-
-        private readonly IList<TimeEntry> _timeEntries = new List<TimeEntry>();
-
-        public virtual Invoice Invoice { get; protected set; }
-        public virtual DateTimeOffset LineItemDate { get; protected set; }
-        public virtual string Description { get; protected set; }
-        public virtual double Quantity { get; protected set; }
-        public virtual double Price { get; protected set; }
-
-        public virtual IReadOnlyList<TimeEntry> TimeEntries
-        {
-            get { return _timeEntries.AsReadOnly(); }
+            return _lineItems.Sum(x => x.GetTotal());
         }
     }
 }

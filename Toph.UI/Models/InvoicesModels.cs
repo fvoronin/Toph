@@ -1,10 +1,26 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
+using Toph.Domain.Entities;
 
 namespace Toph.UI.Models
 {
     public class InvoicesInvoiceModel
     {
+        public InvoicesInvoiceModel()
+        {
+        }
+
+        public InvoicesInvoiceModel(Invoice invoice)
+        {
+            InvoiceDate = invoice.InvoiceDate.ToString("MM/dd/yyyy");
+            InvoiceNumber = invoice.InvoiceNumber;
+            InvoiceTotal = invoice.GetTotal().ToString("C");
+            InvoiceLineItems = invoice.LineItems.Select(x => new LineItem(x)).ToArray();
+            InvoiceCustomer = invoice.InvoiceCustomer == null ? null : new Customer(invoice.InvoiceCustomer);
+        }
+
         [Required]
         public string InvoiceDate { get; set; }
 
@@ -12,18 +28,53 @@ namespace Toph.UI.Models
         public string InvoiceNumber { get; set; }
 
         [Required]
-        public string CustomerName { get; set; }
-
-        [Required]
-        public AddressModel Address { get; set; }
-
-        [Required]
         public string InvoiceTotal { get; set; }
 
-        public LineItem[] LineItems { get; set; }
+        public Customer InvoiceCustomer { get; set; }
+
+        public LineItem[] InvoiceLineItems { get; set; }
+
+        public class Customer
+        {
+            public Customer()
+            {
+            }
+
+            public Customer(InvoiceCustomer customer)
+            {
+                Name = customer.Name;
+                Address = new AddressModel
+                          {
+                              Line1 = customer.Line1,
+                              Line2 = customer.Line2,
+                              City = customer.City,
+                              State = customer.State,
+                              PostalCode = customer.PostalCode
+                          };
+            }
+
+            [Required]
+            public string Name { get; set; }
+
+            [Required]
+            public AddressModel Address { get; set; }
+        }
 
         public class LineItem
         {
+            public LineItem()
+            {
+            }
+
+            public LineItem(InvoiceLineItem lineItem)
+            {
+                LineItemDate = lineItem.LineItemDate.ToString("MM/dd/yyyy");
+                Description = lineItem.Description;
+                Quantity = lineItem.Quantity.ToString(CultureInfo.InvariantCulture);
+                Price = lineItem.Price.ToString("C");
+                LineItemTotal = lineItem.GetTotal().ToString("C");
+            }
+
             [Required]
             public string LineItemDate { get; set; }
 
@@ -34,7 +85,7 @@ namespace Toph.UI.Models
             public string Quantity { get; set; }
 
             [Required]
-            public string Amount { get; set; }
+            public string Price { get; set; }
 
             [Required]
             public string LineItemTotal { get; set; }

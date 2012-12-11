@@ -4,9 +4,18 @@
 
     <header class="line">
         <div class="unit size2of3">
-            @Model.CustomerName <br />
-            @Model.Address.Line1 <br />
-            @Model.Address.City, @Model.Address.State @Model.Address.PostalCode
+            @if (Model.InvoiceCustomer == null)
+            {
+                <em>customer not set</em>
+            }
+            else
+            {
+                <text>
+                @Model.InvoiceCustomer.Name <br />
+                @Model.InvoiceCustomer.Address.Line1 <br />
+                @Model.InvoiceCustomer.Address.City, @Model.InvoiceCustomer.Address.State @Model.InvoiceCustomer.Address.PostalCode
+                </text>
+            }
         </div>
         <div class="unit size1of3" style="text-align: right;">
             Invoice Date: @Model.InvoiceDate <br />
@@ -26,13 +35,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var lineItem in Model.LineItems)
+                @foreach (var lineItem in Model.InvoiceLineItems)
                 {
                     <tr>
                         <td style="white-space: nowrap;">@lineItem.LineItemDate</td>
                         <td style="width: 99%;">@lineItem.Description</td>
                         <td style="white-space: nowrap;">@lineItem.Quantity</td>
-                        <td style="white-space: nowrap;">@lineItem.Amount</td>
+                        <td style="white-space: nowrap;">@lineItem.Price</td>
                         <td style="white-space: nowrap;">@lineItem.LineItemTotal</td>
                     </tr>
                 }

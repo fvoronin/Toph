@@ -36,8 +36,15 @@ namespace Toph.UI.Infrastructure
                 .Conventions.Add<MyIdConvention>()
                 .Conventions.Add<MyForeignKeyConvention>()
                 .Conventions.Add<MyCollectionConvention>()
-                .Override<UserProfile>(m => m.HasMany(x => x.Customers).KeyColumn("OwnerId"))
-                .Override<InvoiceLineItem>(m => m.HasMany(x => x.TimeEntries).KeyColumn("InvoiceLineItemId"));
+                .Override<Invoice>(map => map.Component(x => x.InvoiceCustomer, m =>
+                {
+                    m.Map(x => x.Name);
+                    m.Map(x => x.Line1);
+                    m.Map(x => x.Line2);
+                    m.Map(x => x.City);
+                    m.Map(x => x.State);
+                    m.Map(x => x.PostalCode);
+                }));
 
             return Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(x => x.FromConnectionStringWithKey("toph_conn")))
