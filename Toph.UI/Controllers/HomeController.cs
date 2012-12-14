@@ -5,9 +5,10 @@ namespace Toph.UI.Controllers
 {
     public class HomeController : AppController
     {
+        [Authorize]
         public ActionResult Index()
         {
-            return Request.IsAuthenticated ? View() : View("IndexUnauthenticated");
+            return View();
         }
 
         public ActionResult About()

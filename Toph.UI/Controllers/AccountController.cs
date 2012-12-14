@@ -188,7 +188,7 @@ namespace Toph.UI.Controllers
             if (!result.IsSuccessful)
                 return RedirectToAction("ExternalLoginFailure");
 
-            if (OAuthWebSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: false))
+            if (OAuthWebSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: true))
                 return RedirectToLocal(returnUrl);
 
             if (User.Identity.IsAuthenticated)
@@ -231,7 +231,7 @@ namespace Toph.UI.Controllers
                     _unitOfWork.Commit();
 
                     OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Username);
-                    OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+                    OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: true);
 
                     return RedirectToLocal(returnUrl);
                 }
