@@ -36,5 +36,10 @@ namespace Toph.Domain.Entities
 
             return invoice;
         }
+
+        public virtual void Remove(Invoice invoice)
+        {
+            _invoices.Remove(invoice);
+        }
     }
 }

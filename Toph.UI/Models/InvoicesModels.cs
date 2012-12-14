@@ -14,12 +14,15 @@ namespace Toph.UI.Models
 
         public InvoicesInvoiceModel(Invoice invoice)
         {
+            InvoiceId = invoice.Id;
             InvoiceDate = invoice.InvoiceDate.ToString("MM/dd/yyyy");
             InvoiceNumber = invoice.InvoiceNumber;
             InvoiceTotal = invoice.GetTotal().ToString("C");
             InvoiceLineItems = invoice.LineItems.Select(x => new LineItem(x)).ToArray();
             InvoiceCustomer = invoice.InvoiceCustomer == null ? null : new Customer(invoice.InvoiceCustomer);
         }
+
+        public int InvoiceId { get; set; }
 
         [Required]
         public string InvoiceDate { get; set; }
@@ -68,12 +71,15 @@ namespace Toph.UI.Models
 
             public LineItem(InvoiceLineItem lineItem)
             {
+                LineItemId = lineItem.Id;
                 LineItemDate = lineItem.LineItemDate.ToString("MM/dd/yyyy");
                 Description = lineItem.Description;
                 Quantity = lineItem.Quantity.ToString(CultureInfo.InvariantCulture);
                 Price = lineItem.Price.ToString("C");
                 LineItemTotal = lineItem.GetTotal().ToString("C");
             }
+
+            public int LineItemId { get; set; }
 
             [Required]
             public string LineItemDate { get; set; }

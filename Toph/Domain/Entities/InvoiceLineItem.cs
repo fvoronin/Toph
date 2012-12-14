@@ -11,6 +11,10 @@ namespace Toph.Domain.Entities
         internal InvoiceLineItem(Invoice invoice)
         {
             Invoice = invoice;
+            LineItemDate = DateTimeOffset.Now;
+            Description = "";
+            Quantity = 0d;
+            Price = 0d;
         }
 
         public virtual Invoice Invoice { get; protected set; }

@@ -1,0 +1,12 @@
+﻿@model Toph.UI.Models.InvoicesInvoiceModel.LineItem[]
+
+@foreach (var lineItem in Model)
+{
+    <tr data-lineitemid="@lineItem.LineItemId">
+        <td style="white-space: nowrap;">@lineItem.LineItemDate</td>
+        <td style="width: 99%;">@lineItem.Description</td>
+        <td style="white-space: nowrap;">@lineItem.Quantity</td>
+        <td style="white-space: nowrap;">@lineItem.Price</td>
+        <td style="white-space: nowrap;">@lineItem.LineItemTotal</td>
+    </tr>
+}

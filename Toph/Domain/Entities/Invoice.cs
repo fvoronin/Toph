@@ -27,12 +27,21 @@ namespace Toph.Domain.Entities
 
         public virtual IReadOnlyList<InvoiceLineItem> LineItems
         {
-            get { return _lineItems.AsReadOnly(); }
+            get { return _lineItems.OrderBy(x => x.LineItemDate).AsReadOnly(); }
         }
 
         public virtual double GetTotal()
         {
             return _lineItems.Sum(x => x.GetTotal());
+        }
+
+        public virtual InvoiceLineItem CreateNewLineItem()
+        {
+            var lineItem = new InvoiceLineItem(this);
+
+            _lineItems.Add(lineItem);
+
+            return lineItem;
         }
     }
 }

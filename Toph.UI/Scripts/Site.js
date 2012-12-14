@@ -143,7 +143,9 @@ app = {
 
     post: function (url, data, callback) {
         $.post(url, $.extend({}, { '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data), function (returnedData) {
-            callback(returnedData);
+            if (typeof callback === "function") {
+                callback(returnedData);
+            }
         });
     },
 
