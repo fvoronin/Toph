@@ -4,22 +4,20 @@
 
     <header class="line">
         <div class="unit size2of3">
-            @if (Model.InvoiceCustomer == null)
-            {
-                <em>customer not set</em>
-            }
-            else
-            {
-                <text>
-                @Model.InvoiceCustomer.Name <br />
-                @Model.InvoiceCustomer.Address.Line1 <br />
-                @Model.InvoiceCustomer.Address.City, @Model.InvoiceCustomer.Address.State @Model.InvoiceCustomer.Address.PostalCode
-                </text>
-            }
+            <div class="editable customer">
+                @if (Model.InvoiceCustomer == null)
+                {
+                    <em>customer not set</em>
+                }
+                else
+                {
+                    Html.RenderPartial("_InvoiceCustomer", Model.InvoiceCustomer);
+                }
+            </div>
         </div>
         <div class="unit size1of3" style="text-align: right;">
-            Invoice Date: @Model.InvoiceDate <br />
-            Invoice Number: @Model.InvoiceNumber
+            Invoice Date: <span class="editable invoice-date">@Model.InvoiceDate</span> <br />
+            Invoice Number: <span class="editable invoice-date">@Model.InvoiceNumber</span>
         </div>
     </header>
 

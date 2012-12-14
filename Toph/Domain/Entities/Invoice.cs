@@ -43,5 +43,10 @@ namespace Toph.Domain.Entities
 
             return lineItem;
         }
+
+        public virtual void UpdateCustomer(string name, string line1, string line2, string city, string state, string postalCode)
+        {
+            InvoiceCustomer = new InvoiceCustomer(name, line1, line2, city, state, postalCode);
+        }
     }
 }

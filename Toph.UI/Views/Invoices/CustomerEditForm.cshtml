@@ -1,0 +1,33 @@
+﻿@model Toph.UI.Models.InvoicesInvoiceModel.Customer
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+
+        <legend>Customer Information</legend>
+
+        <ol>
+            <li>
+                @Html.TextBoxFor(x => x.Name, new {placeholder = "Customer Name"})
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Address.Line1, new {placeholder = "Line 1"})
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Address.Line2, new {placeholder = "Line 2"})
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Address.City, new {placeholder = "City"})
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Address.State, new {placeholder = "State"})
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Address.PostalCode, new {placeholder = "Postal Code"})
+            </li>
+        </ol>
+
+        @Html.ValidationSummary()
+
+    </fieldset>
+}

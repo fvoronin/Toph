@@ -259,6 +259,8 @@
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.9.0.js" />
     <Content Include="Scripts\jquery-ui-1.9.0.min.js" />
+    <Content Include="Scripts\jquery.placeholder.js" />
+    <Content Include="Scripts\jquery.placeholder.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -313,6 +315,8 @@
     <Content Include="Views\Invoices\_Invoice.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\_InvoiceLineItems.cshtml" />
+    <Content Include="Views\Invoices\CustomerEditForm.cshtml" />
+    <Content Include="Views\Invoices\_InvoiceCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

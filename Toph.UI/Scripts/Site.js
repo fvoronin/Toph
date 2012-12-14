@@ -202,41 +202,8 @@ app = {
         this.cancel = function () {
             window.clearTimeout(timeout);
         };
-    },
-
-    FormInput: function (selector, onChange) {
-        if (!(this instanceof app.FormInput)) throw 'call new';
-
-        var input = $(selector).css('margin-right', 15);
-
-        var busyIndicator = $('<span>')
-            .hide()
-            .insertAfter(input)
-            .append($('<img>')
-                    .attr('alt', 'loading')
-                    .attr('src', app.webroot + 'content/images/loading.gif')
-                    .css({ 'height': 16, 'display': 'inline' }));
-
-        var message = $('<span>')
-            .hide()
-            .insertAfter(busyIndicator);
-
-        input.change(function () {
-            message.hide();
-            busyIndicator.css('display', 'inline');
-            onChange(function (result) {
-                busyIndicator.hide();
-                if (result.Success)
-                    message.text(result.Message).css('display', 'inline');
-                else {
-                    input.removeClass('valid').addClass('input-validation-error');
-                    message.parents('form:first').appendValidationErrors(result.Errors);
-                }
-            });
-        });
-
-        this.val = function () { return input.val(); };
     }
+
 };
 
 /******************************************************/
@@ -247,4 +214,3 @@ app = {
 $(function () {
 
 });
-

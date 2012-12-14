@@ -2,7 +2,10 @@
 
     var module = app.modules.homeIndex = {
         addInvoiceButton: $('#addInvoiceButton'),
-        invoicesContainer: $('#invoicesContainer')
+        invoicesContainer: $('#invoicesContainer'),
+        getInvoiceId: function(element) {
+            return $(element).parents('article:first').data('invoiceid');
+        }
     };
 
     app.overlay.show();
@@ -24,7 +27,7 @@
         e.preventDefault();
 
         var btn = $(this),
-            invoice = btn.parents('article:first'),
+            invoice = module.getInvoiceId(btn),
             invoiceId = invoice.data('invoiceid');
 
         app.post(app.webroot + 'invoices/remove', { invoiceId: invoiceId });
@@ -35,7 +38,7 @@
     $(document).on('click', 'a[href="#addLine"]', function(e) {
         e.preventDefault();
 
-        var btn = $(this), invoiceId = btn.parents('article:first').data('invoiceid');
+        var btn = $(this), invoiceId = module.getInvoiceId(btn);
 
         app.overlay.show();
         app.post(app.webroot + 'invoices/addlineitem', { invoiceId: invoiceId }, function (result) {
@@ -47,6 +50,43 @@
     $(document).on('click', 'a[href="#printInvoice"]', function (e) {
         e.preventDefault();
         app.message('Coming soon');
+    });
+
+    $(document).on('click', '.editable.customer', function() {
+
+        var container = $(this),
+            invoiceId = module.getInvoiceId(container),
+            dialog = $('<div>').hide().appendTo($('body'));
+
+        function _onOk() {
+            var data = $.extend({}, { invoiceId: invoiceId }, dialog.find('form').toObject());
+            app.post(app.webroot + 'invoices/customereditform', data, function (result) {
+                if ($(result).is('form')) {
+                    dialog.html(result);
+                } else {
+                    dialog.dialog("close").remove();
+                    container.html(result);
+                }
+            });
+        }
+
+        dialog
+            .dialog(
+                {
+                    title: 'Customer Information',
+                    modal: true,
+                    width: 'auto',
+                    position: 'top+10%',
+                    buttons: [
+                        { 'text': 'OK', click: _onOk },
+                        { 'text': 'Cancel', click: function() { dialog.dialog("close").remove(); } }
+                    ]
+                })
+            .append($('<p>').text('Loading...'))
+            .load(app.webroot + 'invoices/customereditform?invoiceId=' + invoiceId, function() {
+                dialog.find('[placeholder]').placeholder();
+            });
+
     });
 
 });
