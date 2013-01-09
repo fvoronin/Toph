@@ -3,63 +3,48 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
 
-        <title>@ViewBag.Title - @App["name"]</title>
+        <title>@(ViewBag.HeaderTitle ?? ViewBag.Title) - @App["name"]</title>
 
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
     </head>
     <body>
 
-        <header class="ui-helper-clearfix first-body-section bg-white">
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink(@App["name"] as string, "Index", "Home")</p>
-                </div>
+        <section id="pg-header">
+            <div id="pg-header-inner" class="line pg-inner">
+                <header class="line">
+                    <h2>@Html.ActionLink(App["name"] as string, "Index", "Home")</h2>
+                </header>
+                <nav class="line">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
+                    </ul>
+                </nav>
+                <footer class="line">
+                    <p>
+                        &copy; @DateTime.Now.Year - @App["name"] | <span title="Version">v. <a href="@App["versionUrl"]" target="_blank">@App["version"]</a></span>
+                    </p>
+                </footer>
+            </div>
+        </section>
 
-                <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                        </ul>
-                    </nav>
+        <section id="pg-content">
+            <div id="pg-content-inner" class="line pg-inner">
+                @Html.AntiForgeryToken()
+
+                @* hack to preload the spinning gif *@
+                <div class="loading" style="position: absolute; top: -1000px; width: 1px;"></div>
+
+                <div class="line">
+                    @RenderBody()
                 </div>
             </div>
-        </header>
-
-        <div class="ui-helper-clearfix last-body-section bg-light">
-            @if (IsSectionDefined("featured"))
-            {
-                <div class="featured-content bg-white">
-                    <section class="content-wrapper">
-                        @RenderSection("featured", required: false)
-                    </section>
-                </div>
-            }
-
-            <section class="ui-helper-clearfix content-wrapper main-content">
-                @RenderBody()
-            </section>
-        </div>
-
-        <footer class="ui-helper-clearfix footer-height bg-dark font-small">
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" target="_blank">Version @App["version"]</a></p>
-                </div>
-            </div>
-        </footer>
-
-        @Html.AntiForgeryToken()
-
-        @* hack to preload the spinning gif *@
-        <div class="loading" style="position: absolute; top: -100px; width: 1px;"></div>
+        </section>
 
         @Scripts.Render("~/bundles/common")
 

@@ -198,7 +198,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\facebook.png" />
+    <Content Include="Content\images\google.png" />
     <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\microsoft.png" />
+    <Content Include="Content\images\myopenid.png" />
+    <Content Include="Content\images\yahoo.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -289,19 +294,6 @@
     </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Images\accent.png" />
-    <Content Include="Images\bullet.png" />
-    <Content Include="Images\heroAccent.png" />
-    <Content Include="Images\orderedList0.png" />
-    <Content Include="Images\orderedList1.png" />
-    <Content Include="Images\orderedList2.png" />
-    <Content Include="Images\orderedList3.png" />
-    <Content Include="Images\orderedList4.png" />
-    <Content Include="Images\orderedList5.png" />
-    <Content Include="Images\orderedList6.png" />
-    <Content Include="Images\orderedList7.png" />
-    <Content Include="Images\orderedList8.png" />
-    <Content Include="Images\orderedList9.png" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
@@ -324,6 +316,10 @@
     <Content Include="Views\Invoices\_InvoiceLineItems.cshtml" />
     <Content Include="Views\Invoices\CustomerEditForm.cshtml" />
     <Content Include="Views\Invoices\_InvoiceCustomer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\int32.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\password.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\string.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -374,16 +370,6 @@
     <GitVersion LocalPath="$(SolutionDir)">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
-    <AssemblyInfo
-      CodeLanguage="CS"
-      OutputFile="..\GlobalAssemblyInfo.cs"
-      AssemblyCompany="Iroh Services, LLC"
-      AssemblyProduct="Codename: Toph"
-      AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Iroh Services, LLC"
-      AssemblyTrademark="Iroh Services"
-      AssemblyConfiguration="$(Configuration)"
-      AssemblyVersion="0.1.0.0"
-      AssemblyFileVersion="0.1.0.0"
-      AssemblyInformationalVersion="0.1.0.$(Revision)" />
+    <AssemblyInfo CodeLanguage="CS" OutputFile="..\GlobalAssemblyInfo.cs" AssemblyCompany="Iroh Services, LLC" AssemblyProduct="Codename: Toph" AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Iroh Services, LLC" AssemblyTrademark="Iroh Services" AssemblyConfiguration="$(Configuration)" AssemblyVersion="0.1.0.0" AssemblyFileVersion="0.1.0.0" AssemblyInformationalVersion="0.1.0.$(Revision)" />
   </Target>
 </Project>

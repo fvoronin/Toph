@@ -3,19 +3,30 @@
     ViewBag.Title = "Manage Account";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-</hgroup>
+<h1>@ViewBag.Title</h1>
 
-<p class="message-success">@ViewBag.StatusMessage</p>
+<p>@ViewBag.StatusMessage</p>
 
-<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+<div class="line">
+    @using (Html.BeginForm("LogOff", "Account"))
+    {
+        @Html.AntiForgeryToken()
+        <p>
+            You're signed in as <strong>@User.Identity.Name</strong>.
+            <a href="#sign-out" onclick="$(this).parents('form:first').submit(); return false;">sign out</a>
+        </p>
+    }
 
-@(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
+    @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
+</div>
 
-<section id="externalLogins">
+
+<div class="line spaced">
     @Html.Action("RemoveExternalLogins")
+</div>
 
+
+<div class="line spaced">
     <h3>Add an external login</h3>
     @Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl})
-</section>
+</div>
