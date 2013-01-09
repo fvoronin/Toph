@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RobTennyson.Common</id>
+    <version>1.2.4738.23281</version>
+    <authors>Rob Tennyson</authors>
+    <owners>Rob Tennyson</owners>
+    <licenseUrl>http://en.wikipedia.org/wiki/Public_Domain</licenseUrl>
+    <projectUrl>https://github.com/rtennys/Common</projectUrl>
+    <iconUrl>https://secure.gravatar.com/avatar/b40b81a7927879a463f91a1074fea98a?s=32</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The utility classes and extension methods I tend to pull along with me as I move from project to project. I basically got tired of re-writing them. Also as they slowly morphed, I wouldn't be sure which past project I should refer to when I was starting a new project (to make sure I got the latest and greatest). This package will hopefully solve that problem!
+
+            Keep in mind that I created this with me in mind. The contents are subject to change on a whim and without notice. If you have a project with this included, it's more than likely because I was a consultant for you (or your employer). Update with care!</description>
+    <summary>Rob Tennyson's Common Stuff</summary>
+    <tags>.net c# personal public-domain</tags>
+    <dependencies>
+      <dependency id="CommonServiceLocator" version="1.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Web.Extensions" targetFramework="" />
+      <frameworkAssembly assemblyName="System.XML" targetFramework="" />
+    </frameworkAssemblies>
+    <references />
+  </metadata>
+</package>

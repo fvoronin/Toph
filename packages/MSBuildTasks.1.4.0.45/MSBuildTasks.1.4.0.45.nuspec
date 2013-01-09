@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MSBuildTasks</id>
     <version>1.4.0.45</version>
@@ -10,5 +10,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The MSBuild Community Tasks project is a collection of open source tasks for MSBuild.</description>
     <tags>MSBuild</tags>
+    <references />
   </metadata>
 </package>
