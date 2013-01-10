@@ -17,7 +17,6 @@ namespace Toph.UI
                 "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery.validate.js",
                 "~/Scripts/jquery.validate.unobtrusive.js",
-                "~/Scripts/jquery.placeholder.js",
                 "~/Scripts/Site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

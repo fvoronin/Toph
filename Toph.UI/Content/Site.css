@@ -78,6 +78,7 @@ html, body { margin: 0; border: 0; padding: 0; }
 body { background: none repeat scroll 0 0 #fff; font: .875em/1.2 "Hoefler Text", "Times New Roman", Times, serif; }
 a, a:visited { text-decoration: none; }
 a:hover { text-decoration: underline; }
+th, td { padding: 2px 5px; text-align: left; vertical-align: top; white-space: nowrap; }
 
 /* colors */
 body, h1 a, h2 a, h3 a, h1 a:visited, h2 a:visited, h3 a:visited { color: #333; }

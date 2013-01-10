@@ -3,19 +3,25 @@
     var module = app.modules.homeIndex = {
         addInvoiceButton: $('#addInvoiceButton'),
         invoicesContainer: $('#invoicesContainer'),
-        getInvoiceId: function(element) {
-            return $(element).parents('article:first').data('invoiceid');
+        url: function(actionAndQuery) {
+            return app.webroot + 'invoices/' + actionAndQuery;
+        },
+        getInvoice: function (element) {
+            return $(element).parents('article:first');
+        },
+        getInvoiceId: function (element) {
+            return module.getInvoice(element).data('invoiceid');
         }
     };
 
     app.overlay.show();
-    module.invoicesContainer.load(app.webroot + 'invoices/load', function () {
+    module.invoicesContainer.load(module.url('load'), function () {
         app.overlay.hide();
     });
 
     module.addInvoiceButton.click(function (e) {
         e.preventDefault();
-        app.post(app.webroot + 'invoices/add', {}, function (result) {
+        app.post(module.url('add'), {}, function (result) {
             $(result)
                 .hide()
                 .prependTo(module.invoicesContainer)
@@ -23,36 +29,36 @@
         });
     });
 
-    $(document).on('click', 'a[href="#deleteInvoice"]', function (e) {
+    module.invoicesContainer.on('click', 'a[href="#deleteInvoice"]', function (e) {
         e.preventDefault();
 
         var btn = $(this),
-            invoice = module.getInvoiceId(btn),
-            invoiceId = invoice.data('invoiceid');
+            invoice = module.getInvoice(btn),
+            invoiceId = module.getInvoiceId(btn);
 
-        app.post(app.webroot + 'invoices/remove', { invoiceId: invoiceId });
+        app.post(module.url('remove'), { invoiceId: invoiceId });
 
         invoice.slideUp('slow', function () { invoice.remove(); });
     });
 
-    $(document).on('click', 'a[href="#addLine"]', function(e) {
+    module.invoicesContainer.on('click', 'a[href="#addLine"]', function (e) {
         e.preventDefault();
 
         var btn = $(this), invoiceId = module.getInvoiceId(btn);
 
         app.overlay.show();
-        app.post(app.webroot + 'invoices/addlineitem', { invoiceId: invoiceId }, function (result) {
+        app.post(module.url('addlineitem'), { invoiceId: invoiceId }, function (result) {
             btn.parents('table:first').find('tbody').html(result);
             app.overlay.hide();
         });
     });
 
-    $(document).on('click', 'a[href="#printInvoice"]', function (e) {
+    module.invoicesContainer.on('click', 'a[href="#printInvoice"]', function (e) {
         e.preventDefault();
         app.message('Coming soon');
     });
 
-    $(document).on('click', '.editable.customer', function() {
+    module.invoicesContainer.on('click', '.editable.customer', function () {
 
         var container = $(this),
             invoiceId = module.getInvoiceId(container),
@@ -60,7 +66,7 @@
 
         function _onOk() {
             var data = $.extend({}, { invoiceId: invoiceId }, dialog.find('form').toObject());
-            app.post(app.webroot + 'invoices/customereditform', data, function (result) {
+            app.post(module.url('customereditform'), data, function (result) {
                 if ($(result).is('form')) {
                     dialog.html(result);
                 } else {
@@ -83,9 +89,7 @@
                     ]
                 })
             .append($('<p>').text('Loading...'))
-            .load(app.webroot + 'invoices/customereditform?invoiceId=' + invoiceId, function() {
-                dialog.find('[placeholder]').placeholder();
-            });
+            .load(module.url('customereditform?invoiceId=' + invoiceId));
 
     });
 
