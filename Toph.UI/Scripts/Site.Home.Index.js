@@ -1,46 +1,37 @@
 ﻿(function (app, $, ko) {
 
-    var module = app.modules.homeIndex = {
-        vm: {
-            noInvoicesMessage: ko.observable('Loading...'),
-            invoices: ko.observableArray(),
-            addInvoice: addInvoice,
-            deleteInvoice: deleteInvoice,
-            printInvoice: printInvoice,
-            addLine: addLine
-        },
-        invoicesContainer: $('#invoicesContainer'),
-        url: function(actionAndQuery) {
-            return app.webroot + 'invoices/' + actionAndQuery;
-        },
-        getInvoice: function(element) {
-            return $(element).parents('article:first');
-        },
-        getInvoiceId: function(element) {
-            return module.getInvoice(element).data('invoiceid');
-        }
+    var vm = app.modules.homeIndex = {
+        invoices: ko.observableArray(),
+        noInvoicesMessage: ko.observable('Loading...'),
+        addInvoice: addInvoice,
+        deleteInvoice: deleteInvoice,
+        printInvoice: printInvoice,
+        addLine: addLine,
+        editCustomer: editCustomer
     };
 
-    ko.applyBindings(module.vm);
-    setTimeout(init, 100);
+    ko.applyBindings(vm);
+    setTimeout(init, 500);
 
     function init() {
-        $.get(module.url('load'), function (invoices) {
-            module.vm.invoices($.map(invoices, function (invoice) { return ko.mapping.fromJS(invoice); }));
-            module.vm.noInvoicesMessage('No open invoices found');
+        $.get(url('load'), function (invoices) {
+            vm.invoices($.map(invoices, function (invoice) { return ko.mapping.fromJS(invoice); }));
+            vm.noInvoicesMessage('No open invoices found');
         });
     }
 
     function addInvoice() {
-        app.post(module.url('add'), {}, function (invoice) {
-            module.vm.invoices.push(ko.mapping.fromJS(invoice));
+        app.post(url('add'), {}, function (invoice) {
+            vm.invoices.push(ko.mapping.fromJS(invoice));
             app.logger.info('Added invoice ' + invoice.InvoiceId);
         });
     }
     
     function deleteInvoice(invoice) {
-        app.post(module.url('remove'), { invoiceId: invoice.InvoiceId() }, function() {
-            module.vm.invoices.remove(invoice);
+        if (!confirm('Permanently delete this invoice?')) return;
+
+        app.post(url('remove'), { invoiceId: invoice.InvoiceId() }, function() {
+            vm.invoices.remove(invoice);
             app.logger.info('Deleted invoice ' + invoice.InvoiceId());
         });
     }
@@ -50,9 +41,46 @@
     }
 
     function addLine(invoice) {
-        app.post(module.url('addlineitem'), { invoiceId: invoice.InvoiceId() }, function (lineItem) {
+        app.post(url('addlineitem'), { invoiceId: invoice.InvoiceId() }, function (lineItem) {
             invoice.InvoiceLineItems.push(ko.mapping.fromJS(lineItem));
         });
+    }
+
+    function editCustomer(invoice) {
+
+        var dialog = $('<div>').hide().appendTo($('body'));
+
+        function _onOk() {
+            var data = $.extend({}, { invoiceId: invoice.InvoiceId() }, dialog.find('form').toObject());
+            app.post(url('customereditform'), data, function(result) {
+                if ($(result).is('form')) {
+                    dialog.html(result);
+                } else {
+                    dialog.dialog("close").remove();
+                    ko.mapping.fromJS(result, {}, invoice.InvoiceCustomer);
+                }
+            });
+        }
+
+        dialog
+            .dialog(
+                {
+                    title: 'Customer Information',
+                    modal: true,
+                    width: 'auto',
+                    position: 'top+10%',
+                    buttons: [
+                        { 'text': 'OK', click: _onOk },
+                        { 'text': 'Cancel', click: function() { dialog.dialog("close").remove(); } }
+                    ]
+                })
+            .append($('<p>').text('Loading...'))
+            .load(url('customereditform?invoiceId=' + invoice.InvoiceId()));
+
+    }
+
+    function url(actionAndQuery) {
+        return app.webroot + 'invoices/' + actionAndQuery;
     }
 
 })(app, jQuery, ko);

@@ -311,11 +311,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Invoices\_Load.cshtml" />
-    <Content Include="Views\Invoices\_Invoice.cshtml" />
-    <Content Include="Views\Invoices\_InvoiceLineItems.cshtml" />
     <Content Include="Views\Invoices\CustomerEditForm.cshtml" />
-    <Content Include="Views\Invoices\_InvoiceCustomer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\int32.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\password.cshtml" />

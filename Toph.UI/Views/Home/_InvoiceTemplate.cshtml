@@ -1,10 +1,7 @@
 ﻿<article class="line" style="border-top: dotted 1px #ccc; margin-bottom: 50px;">
 
     <header class="line">
-        <div class="unit size2of3">
-            <div data-bind="visible: InvoiceCustomer() == null">
-                <em>customer not set</em>
-            </div>
+        <div class="unit size2of3" data-bind="click: $root.editCustomer">
             <div data-bind="with: InvoiceCustomer">
                 <div data-bind="text: Name"></div>
                 <div data-bind="text: Address.Line1"></div>

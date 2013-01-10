@@ -93,6 +93,9 @@ namespace Toph.UI.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult CustomerEditForm(int invoiceId, InvoicesInvoiceModel.Customer model)
         {
+            if (!ModelState.IsValid)
+                return PartialView(model);
+
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
             if (user == null)
                 throw new Exception("Username {0} not found".F(User.Identity.Name));
@@ -101,13 +104,10 @@ namespace Toph.UI.Controllers
             if (invoice == null)
                 throw new Exception("Invoice {0} not found".F(invoiceId));
 
-            if (!ModelState.IsValid)
-                return PartialView(model);
-
             invoice.UpdateCustomer(model.Name, model.Address.Line1, model.Address.Line2, model.Address.City, model.Address.State, model.Address.PostalCode);
             _uow.Commit();
 
-            return PartialView("_InvoiceCustomer", model);
+            return Json(model);
         }
     }
 }

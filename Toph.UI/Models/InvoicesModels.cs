@@ -19,7 +19,7 @@ namespace Toph.UI.Models
             InvoiceNumber = invoice.InvoiceNumber;
             InvoiceTotal = invoice.GetTotal().ToString("C");
             InvoiceLineItems = invoice.LineItems.Select(x => new LineItem(x)).ToArray();
-            InvoiceCustomer = invoice.InvoiceCustomer == null ? null : new Customer(invoice.InvoiceCustomer);
+            InvoiceCustomer = new Customer(invoice.InvoiceCustomer);
         }
 
         public int InvoiceId { get; set; }
@@ -45,15 +45,8 @@ namespace Toph.UI.Models
 
             public Customer(InvoiceCustomer customer)
             {
-                Name = customer.Name;
-                Address = new AddressModel
-                          {
-                              Line1 = customer.Line1,
-                              Line2 = customer.Line2,
-                              City = customer.City,
-                              State = customer.State,
-                              PostalCode = customer.PostalCode
-                          };
+                Name = customer == null ? "Costomer not set" : customer.Name;
+                Address = customer == null ? new AddressModel() : new AddressModel(customer.Line1, customer.Line2, customer.City, customer.State, customer.PostalCode);
             }
 
             [Required]
