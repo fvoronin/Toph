@@ -66,49 +66,37 @@ app = {
 
     modules: {}, // add modules here for consistency and convenience in the debugger
 
-    debug: function (message) {
-        if (window.console && 'debug' in window.console)
-            console.debug(message);
-        else if (window.console && 'log' in window.console)
-            console.log(message);
-        else
-            $('<div>').text(message).appendTo('body');
-        return this;
-    },
+    logger: (function () {
+        if (!toastr) throw 'toastr plugin not referenced';
 
-    message: (function () {
-        var _messageDiv;
-        function getMessageDiv() {
-            if (!_messageDiv)
-                _messageDiv = $('<div>')
-                    .addClass('app-message')
-                    .css({ position: 'absolute', top: '0', left: '0', width: '100%', 'border-bottom': 'solid 2px #000', 'background-color': '#eaeaea', 'font-size': '1.2em', 'font-weight': 'bold', 'z-index': '100' })
-                    .append($('<div>')
-                        .css({ padding: '5px' })
-                        .append($('<span>'))
-                        .append($('<a href="#delete" title="delete">')
-                            .addClass('app-button app-button-icon-solo ui-state-default ui-corner-all')
-                            .css({ 'float': 'right' })
-                            .hover(function () { $(this).addClass('ui-state-hover'); }, function () { $(this).removeClass('ui-state-hover'); })
-                            .click(function (e) { e.preventDefault(); $(this).parents('.app-message:first').remove(); repositionMessages(); })
-                            .append('<span class="ui-icon ui-icon-closethick"></span>')));
-            return _messageDiv.clone(true);
-        }
+        toastr.options.timeOut = 2000;
+        toastr.options.positionClass = 'toast-bottom-right';
 
-        function repositionMessages() {
-            var lastBottom = 0;
-            $('.app-message').each(function () {
-                var msg = $(this);
-                msg.animate({ top: lastBottom });
-                lastBottom = lastBottom + msg.outerHeight();
-            });
-        }
-
-        return function (message) {
-            getMessageDiv().appendTo('body').find('span:first').text(message);
-            repositionMessages();
-            return this;
+        return {
+            error: function (message, title) {
+                toastr.error(message, title);
+                log('Error: ' + message);
+            },
+            info: function (message, title) {
+                toastr.info(message, title);
+                log('Info: ' + message);
+            },
+            success: function (message, title) {
+                toastr.success(message, title);
+                log('Success: ' + message);
+            },
+            warning: function (message, title) {
+                toastr.warning(message, title);
+                log('Warning: ' + message);
+            },
+            logonly: log
         };
+
+        function log() {
+            var console = window.console;
+            !!console && console.log && console.log.apply && console.log.apply(console, arguments);
+        }
+
     })(),
 
     overlay: (function () {
@@ -147,38 +135,6 @@ app = {
                 callback(returnedData);
             }
         });
-    },
-
-    svc: {
-        call: function (url, data, callback, async) {
-            callback = callback || function () { };
-            async = (async === null || async);
-
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                url: url,
-                data: JSON.stringify(data),
-                dataType: 'json',
-                async: async,
-                success: function (jsonResult) {
-                    if (jsonResult && typeof (jsonResult.d) !== 'undefined')
-                        callback(jsonResult.d);
-                    else
-                        callback(jsonResult);
-                },
-                error: function () {
-                    app.debug("Error calling '" + url + "' " + JSON.stringify(data));
-                    callback({});
-                }
-            });
-
-            return this;
-        },
-        callWithOverlay: function (url, data, callback, async) {
-            app.overlay.show();
-            return this.call(url, data, function (r) { callback(r); app.overlay.hide(); }, async);
-        }
     },
 
     Delayed: function (callback, millisecondsToDelay) {

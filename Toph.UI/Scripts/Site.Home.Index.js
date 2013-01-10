@@ -1,96 +1,58 @@
-﻿$(function () {
+﻿(function (app, $, ko) {
 
     var module = app.modules.homeIndex = {
-        addInvoiceButton: $('#addInvoiceButton'),
+        vm: {
+            noInvoicesMessage: ko.observable('Loading...'),
+            invoices: ko.observableArray(),
+            addInvoice: addInvoice,
+            deleteInvoice: deleteInvoice,
+            printInvoice: printInvoice,
+            addLine: addLine
+        },
         invoicesContainer: $('#invoicesContainer'),
         url: function(actionAndQuery) {
             return app.webroot + 'invoices/' + actionAndQuery;
         },
-        getInvoice: function (element) {
+        getInvoice: function(element) {
             return $(element).parents('article:first');
         },
-        getInvoiceId: function (element) {
+        getInvoiceId: function(element) {
             return module.getInvoice(element).data('invoiceid');
         }
     };
 
-    app.overlay.show();
-    module.invoicesContainer.load(module.url('load'), function () {
-        app.overlay.hide();
-    });
+    ko.applyBindings(module.vm);
+    setTimeout(init, 100);
 
-    module.addInvoiceButton.click(function (e) {
-        e.preventDefault();
-        app.post(module.url('add'), {}, function (result) {
-            $(result)
-                .hide()
-                .prependTo(module.invoicesContainer)
-                .slideDown('slow');
+    function init() {
+        $.get(module.url('load'), function (invoices) {
+            module.vm.invoices($.map(invoices, function (invoice) { return ko.mapping.fromJS(invoice); }));
+            module.vm.noInvoicesMessage('No open invoices found');
         });
-    });
+    }
 
-    module.invoicesContainer.on('click', 'a[href="#deleteInvoice"]', function (e) {
-        e.preventDefault();
-
-        var btn = $(this),
-            invoice = module.getInvoice(btn),
-            invoiceId = module.getInvoiceId(btn);
-
-        app.post(module.url('remove'), { invoiceId: invoiceId });
-
-        invoice.slideUp('slow', function () { invoice.remove(); });
-    });
-
-    module.invoicesContainer.on('click', 'a[href="#addLine"]', function (e) {
-        e.preventDefault();
-
-        var btn = $(this), invoiceId = module.getInvoiceId(btn);
-
-        app.overlay.show();
-        app.post(module.url('addlineitem'), { invoiceId: invoiceId }, function (result) {
-            btn.parents('table:first').find('tbody').html(result);
-            app.overlay.hide();
+    function addInvoice() {
+        app.post(module.url('add'), {}, function (invoice) {
+            module.vm.invoices.push(ko.mapping.fromJS(invoice));
+            app.logger.info('Added invoice ' + invoice.InvoiceId);
         });
-    });
+    }
+    
+    function deleteInvoice(invoice) {
+        app.post(module.url('remove'), { invoiceId: invoice.InvoiceId() }, function() {
+            module.vm.invoices.remove(invoice);
+            app.logger.info('Deleted invoice ' + invoice.InvoiceId());
+        });
+    }
+    
+    function printInvoice(invoice) {
+        app.logger.info('Coming soon (print invoice ' + invoice.InvoiceId() + ')');
+    }
 
-    module.invoicesContainer.on('click', 'a[href="#printInvoice"]', function (e) {
-        e.preventDefault();
-        app.message('Coming soon');
-    });
+    function addLine(invoice) {
+        app.post(module.url('addlineitem'), { invoiceId: invoice.InvoiceId() }, function (lineItem) {
+            invoice.InvoiceLineItems.push(ko.mapping.fromJS(lineItem));
+        });
+    }
 
-    module.invoicesContainer.on('click', '.editable.customer', function () {
-
-        var container = $(this),
-            invoiceId = module.getInvoiceId(container),
-            dialog = $('<div>').hide().appendTo($('body'));
-
-        function _onOk() {
-            var data = $.extend({}, { invoiceId: invoiceId }, dialog.find('form').toObject());
-            app.post(module.url('customereditform'), data, function (result) {
-                if ($(result).is('form')) {
-                    dialog.html(result);
-                } else {
-                    dialog.dialog("close").remove();
-                    container.html(result);
-                }
-            });
-        }
-
-        dialog
-            .dialog(
-                {
-                    title: 'Customer Information',
-                    modal: true,
-                    width: 'auto',
-                    position: 'top+10%',
-                    buttons: [
-                        { 'text': 'OK', click: _onOk },
-                        { 'text': 'Cancel', click: function() { dialog.dialog("close").remove(); } }
-                    ]
-                })
-            .append($('<p>').text('Loading...'))
-            .load(module.url('customereditform?invoiceId=' + invoiceId));
-
-    });
-
-});
+})(app, jQuery, ko);

@@ -5,14 +5,14 @@
 <h3>Open Invoices</h3>
 
 <p>
-    <a href="#add" id="addInvoiceButton">Add</a>
+    <a href="#add-invoice" data-bind="click: addInvoice">Add</a>
 </p>
 
-<div id="invoicesContainer">Loading...</div>
+<div data-bind="visible: invoices().length == 0, text: noInvoicesMessage"></div>
 
-<p>
-    @Html.ActionLink("all invoices", "Index", "Invoices")
-</p>
+<div data-bind="foreach: invoices">
+    @Html.Partial("_InvoiceTemplate")
+</div>
 
 @section scripts
 {

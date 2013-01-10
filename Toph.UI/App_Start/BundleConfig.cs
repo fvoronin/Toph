@@ -17,11 +17,15 @@ namespace Toph.UI
                 "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery.validate.js",
                 "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/knockout-{version}.js",
+                "~/Scripts/knockout.mapping-latest.js",
+                "~/Scripts/toastr.js",
                 "~/Scripts/Site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/site.css",
-                "~/Content/themes/base/jquery-ui.css"));
+                "~/Content/themes/base/jquery-ui.css",
+                "~/Content/toastr.css",
+                "~/Content/site.css"));
         }
     }
 }

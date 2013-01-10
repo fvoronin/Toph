@@ -20,11 +20,6 @@ namespace Toph.UI.Controllers
         private readonly IRepository _repository;
         private readonly IUnitOfWork _uow;
 
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         public ActionResult Load()
         {
             var model = _repository
@@ -34,7 +29,7 @@ namespace Toph.UI.Controllers
                 .Select(x => new InvoicesInvoiceModel(x))
                 .ToArray();
 
-            return PartialView("_Load", model);
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -47,7 +42,7 @@ namespace Toph.UI.Controllers
             var invoice = user.CreateNewInvoice();
             _uow.Commit();
 
-            return PartialView("_Invoice", new InvoicesInvoiceModel(invoice));
+            return Json(new InvoicesInvoiceModel(invoice));
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -76,12 +71,10 @@ namespace Toph.UI.Controllers
             if (invoice == null)
                 throw new Exception("Invoice {0} not found".F(invoiceId));
 
-            invoice.CreateNewLineItem();
+            var lineItem = invoice.CreateNewLineItem();
             _uow.Commit();
 
-            var model = invoice.LineItems.Select(x => new InvoicesInvoiceModel.LineItem(x)).ToArray();
-
-            return PartialView("_InvoiceLineItems", model);
+            return Json(new InvoicesInvoiceModel.LineItem(lineItem));
         }
 
         public ActionResult CustomerEditForm(int invoiceId)
