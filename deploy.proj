@@ -39,7 +39,7 @@
     <MSBuild
        Projects="$(WebProjectFilename)"
        Targets="PipelinePreDeployCopyAllFilesToOneFolder"
-       Properties="Configuration=Release;AutoParameterizationWebConfigConnectionStrings=False;_PackageTempDir=$(StagingDir)" />
+       Properties="Configuration=Release;AutoParameterizationWebConfigConnectionStrings=False;_PackageTempDir=$(StagingDir);SolutionDir=$(SolutionDir)" />
   </Target>
 
   <Target Name="Cleanup">
