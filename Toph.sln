@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		db-create.sql = db-create.sql
 		db-update.bat = db-update.bat
 		db-update.sql = db-update.sql
+		deploy.bat = deploy.bat
+		deploy.proj = deploy.proj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toph.UI", "Toph.UI\Toph.UI.csproj", "{573FDEE4-D183-408B-B8D4-D80B4E3EAC1E}"
