@@ -1,65 +1,61 @@
-﻿<article class="line" style="border-top: dotted 1px #ccc; margin-bottom: 50px;">
+﻿<article class="line" style="margin-bottom: 50px;">
 
-    <header class="line">
-        <div class="unit size2of3" data-bind="click: $root.editCustomer">
-            <div data-bind="with: InvoiceCustomer">
-                <div data-bind="text: Name"></div>
-                <div data-bind="text: Address.Line1"></div>
-                <div>
-                    <span data-bind="text: Address.City"></span>
-                    <span data-bind="text: Address.State"></span>
-                    <span data-bind="text: Address.PostalCode"></span>
-                </div>
-            </div>
-        </div>
-        <div class="unit size1of3" style="text-align: right;">
-            <div>Invoice Date: <span data-bind="text: InvoiceDate"></span></div>
-            <div>Invoice Number: <span data-bind="text: InvoiceNumber"></span></div>
-        </div>
+    <header class="line" style="background: #efefef; padding: 2px 5px;">
+        <div data-bind="text: InvoiceDate" title="Invoice Date" class="unit size1of2"></div>
+        <div data-bind="text: InvoiceNumber" title="Invoice Number" class="unit size1of2" style="text-align: right;"></div>
     </header>
 
-    <section class="line spaced" style="font-size: .85em;">
-        <table style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th style="width: 99%;">Description</th>
-                    <th>Quantity</th>
-                    <th>Amount</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: InvoiceLineItems">
-                <tr>
-                    <td data-bind="text: LineItemDate"></td>
-                    <td data-bind="text: Description" style="width: 99%;"></td>
-                    <td data-bind="text: Quantity"></td>
-                    <td data-bind="text: Price"></td>
-                    <td data-bind="text: LineItemTotal"></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4">
-                        <div class="line">
-                            <div class="unit size3of4">
-                                <p>
-                                    <a href="#addLine" data-bind="click: $root.addLine">Add Line Item</a> <br />
-                                    <a href="#printInvoice" data-bind="click: $root.printInvoice">Print Invoice</a>
-                                </p>
-                                <p>
-                                    <a href="#deleteInvoice" data-bind="click: $root.deleteInvoice">Delete Invoice</a>
-                                </p>
-                            </div>
-                            <div class="unit size1of4" style="text-align: right; font-weight: bold;">
-                                Grand Total:
-                            </div>
+    <div class="line" style="margin: 15px 0;" data-bind="click: $root.editCustomer, with: InvoiceCustomer">
+        <div data-bind="text: Name"></div>
+        <div data-bind="text: Address.Line1"></div>
+        <div data-bind="text: Address.Line2"></div>
+        <div>
+            <span data-bind="text: Address.City"></span>
+            <span data-bind="text: Address.State"></span>
+            <span data-bind="text: Address.PostalCode"></span>
+        </div>
+    </div>
+
+    <table class="line" style="width: 100%; font-size: .85em;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th style="width: 99%;">Description</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: InvoiceLineItems">
+            <tr>
+                <td data-bind="text: LineItemDate"></td>
+                <td data-bind="text: Description" style="width: 99%;"></td>
+                <td data-bind="text: Quantity"></td>
+                <td data-bind="text: Price"></td>
+                <td data-bind="text: LineItemTotal"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <div class="line">
+                        <div class="unit size3of4">
+                            <p>
+                                <a href="#addLine" data-bind="click: $root.addLine">Add Line Item</a> <br />
+                                <a href="#printInvoice" data-bind="click: $root.printInvoice">Print Invoice</a>
+                            </p>
+                            <p>
+                                <a href="#deleteInvoice" data-bind="click: $root.deleteInvoice">Delete Invoice</a>
+                            </p>
                         </div>
-                    </td>
-                    <td data-bind="text: InvoiceTotal" style="font-weight: bold;"></td>
-                </tr>
-            </tfoot>
-        </table>
-    </section>
+                        <div class="unit size1of4" style="text-align: right; font-weight: bold;">
+                            Grand Total:
+                        </div>
+                    </div>
+                </td>
+                <td data-bind="text: InvoiceTotal" style="font-weight: bold;"></td>
+            </tr>
+        </tfoot>
+    </table>
 
 </article>
