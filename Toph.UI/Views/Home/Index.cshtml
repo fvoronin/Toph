@@ -5,7 +5,7 @@
 <h3>Open Invoices</h3>
 
 <p>
-    <a href="#add-invoice" data-bind="click: addInvoice">Add</a>
+    <a data-bind="click: onAddInvoiceClick" href="#add-invoice">Add</a>
 </p>
 
 <div data-bind="visible: invoices().length == 0, text: noInvoicesMessage"></div>

@@ -5,7 +5,7 @@
         <div data-bind="text: InvoiceNumber" title="Invoice Number" class="unit size1of2" style="text-align: right;"></div>
     </header>
 
-    <div class="line" style="margin: 15px 0;" data-bind="click: $root.editCustomer, with: InvoiceCustomer">
+    <div data-bind="click: $root.onCustomerClick, with: InvoiceCustomer" class="line clickable" style="margin: 15px 0;">
         <div data-bind="text: Name"></div>
         <div data-bind="text: Address.Line1"></div>
         <div data-bind="text: Address.Line2"></div>
@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody data-bind="foreach: InvoiceLineItems">
-            <tr>
+            <tr data-bind="click: $root.onLineItemClick" class="clickable">
                 <td data-bind="text: LineItemDate"></td>
                 <td data-bind="text: Description" style="width: 99%;"></td>
                 <td data-bind="text: Quantity"></td>
@@ -41,11 +41,11 @@
                     <div class="line">
                         <div class="unit size3of4">
                             <p>
-                                <a href="#addLine" data-bind="click: $root.addLine">Add Line Item</a> <br />
-                                <a href="#printInvoice" data-bind="click: $root.printInvoice">Print Invoice</a>
+                                <a data-bind="click: $root.onAddLineItemClick" href="#add-line">Add Line Item</a> <br />
+                                <a data-bind="click: $root.onExportInvoiceClick" href="#export-invoice">Export Invoice</a>
                             </p>
                             <p>
-                                <a href="#deleteInvoice" data-bind="click: $root.deleteInvoice">Delete Invoice</a>
+                                <a data-bind="click: $root.onDeleteInvoiceClick" href="#delete-invoice">Delete Invoice</a>
                             </p>
                         </div>
                         <div class="unit size1of4" style="text-align: right; font-weight: bold;">

@@ -103,6 +103,7 @@ a, a:visited { color: #5c80b1; }
 
 /* custom classes */
 .loading { background: url("images/loading.gif") 50% 50% no-repeat; }
+.clickable:hover { cursor: pointer; background-color: #efefef; }
 
 .login-button { margin-right: 15px; margin-bottom: 15px; width: 60px; height: 60px; background-color: transparent; background-size: 60px 60px; cursor: pointer; border: none; }
 .facebook-login { background-image: url('images/facebook.png'); }

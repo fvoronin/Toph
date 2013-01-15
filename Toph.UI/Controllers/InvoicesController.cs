@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Toph.Common;
 using Toph.Common.DataAccess;
 using Toph.Domain.Entities;
 using Toph.UI.Models;
@@ -20,7 +19,7 @@ namespace Toph.UI.Controllers
         private readonly IRepository _repository;
         private readonly IUnitOfWork _uow;
 
-        public ActionResult Load()
+        public ActionResult Index()
         {
             var model = _repository
                 .Find<Invoice>()
@@ -36,8 +35,7 @@ namespace Toph.UI.Controllers
         public ActionResult Add()
         {
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
-            if (user == null)
-                throw new Exception("Username {0} not found".F(User.Identity.Name));
+            if (user == null) return HttpNotFound();
 
             var invoice = user.CreateNewInvoice();
             _uow.Commit();
@@ -46,30 +44,28 @@ namespace Toph.UI.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public void Remove(int invoiceId)
+        public ActionResult Remove(int invoiceId)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
-            if (user == null)
-                throw new Exception("Username {0} not found".F(User.Identity.Name));
+            if (user == null) return HttpNotFound();
 
             var invoice = user.Invoices.SingleOrDefault(x => x.Id == invoiceId);
-            if (invoice == null)
-                throw new Exception("Invoice {0} not found".F(invoiceId));
+            if (invoice == null) return HttpNotFound();
 
             user.Remove(invoice);
             _uow.Commit();
+
+            return new EmptyResult();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult AddLineItem(int invoiceId)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
-            if (user == null)
-                throw new Exception("Username {0} not found".F(User.Identity.Name));
+            if (user == null) return HttpNotFound();
 
             var invoice = user.Invoices.SingleOrDefault(x => x.Id == invoiceId);
-            if (invoice == null)
-                throw new Exception("Invoice {0} not found".F(invoiceId));
+            if (invoice == null) return HttpNotFound();
 
             var lineItem = invoice.CreateNewLineItem();
             _uow.Commit();
@@ -80,12 +76,10 @@ namespace Toph.UI.Controllers
         public ActionResult CustomerEditForm(int invoiceId)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
-            if (user == null)
-                throw new Exception("Username {0} not found".F(User.Identity.Name));
+            if (user == null) return HttpNotFound();
 
             var invoice = user.Invoices.SingleOrDefault(x => x.Id == invoiceId);
-            if (invoice == null)
-                throw new Exception("Invoice {0} not found".F(invoiceId));
+            if (invoice == null) return HttpNotFound();
 
             return PartialView(new InvoicesInvoiceModel.Customer(invoice.InvoiceCustomer ?? new InvoiceCustomer()));
         }
@@ -97,12 +91,10 @@ namespace Toph.UI.Controllers
                 return PartialView(model);
 
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
-            if (user == null)
-                throw new Exception("Username {0} not found".F(User.Identity.Name));
+            if (user == null) return HttpNotFound();
 
             var invoice = user.Invoices.SingleOrDefault(x => x.Id == invoiceId);
-            if (invoice == null)
-                throw new Exception("Invoice {0} not found".F(invoiceId));
+            if (invoice == null) return HttpNotFound();
 
             invoice.UpdateCustomer(model.Name, model.Address.Line1, model.Address.Line2, model.Address.City, model.Address.State, model.Address.PostalCode);
             _uow.Commit();

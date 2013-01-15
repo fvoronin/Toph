@@ -130,11 +130,49 @@ app = {
     })(),
 
     post: function (url, data, callback) {
-        $.post(url, $.extend({}, { '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data), function (returnedData) {
+        $.post(url, $.extend({ '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data), function (result) {
             if (typeof callback === "function") {
-                callback(returnedData);
+                callback(result);
             }
         });
+    },
+
+    createDialogForm: function(loadUrl, callback) {
+        var _dialog = $('<div>').hide().appendTo($('body'));
+
+        _dialog.on('submit', 'form', function(e) {
+            var form = $(this);
+
+            e.preventDefault();
+
+            $.validator.unobtrusive.parse(form);
+            if (!form.valid()) {
+                reposition();
+                return false;
+            }
+
+            app.post(form.attr('action'), form.toObject(), function(result) {
+                if (typeof result == 'string') {
+                    _dialog.html(result);
+                    reposition();
+                } else {
+                    _dialog.dialog('close');
+                    callback(result);
+                }
+            });
+
+            return false;
+        });
+
+        _dialog
+            .dialog({ modal: true, width: 'auto', close: function () { _dialog.remove(); } })
+            .append($('<p>').text('Loading...'))
+            .load(loadUrl, reposition);
+
+        function reposition() {
+            // forces it to re-position considering any new content
+            _dialog.dialog('option', 'position', _dialog.dialog('option', 'position'));
+        }
     },
 
     Delayed: function (callback, millisecondsToDelay) {

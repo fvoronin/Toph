@@ -3,31 +3,31 @@
     var vm = app.modules.homeIndex = {
         invoices: ko.observableArray(),
         noInvoicesMessage: ko.observable('Loading...'),
-        addInvoice: addInvoice,
-        deleteInvoice: deleteInvoice,
-        printInvoice: printInvoice,
-        addLine: addLine,
-        editCustomer: editCustomer
+        onAddInvoiceClick: onAddInvoiceClick,
+        onDeleteInvoiceClick: onDeleteInvoiceClick,
+        onExportInvoiceClick: onExportInvoiceClick,
+        onAddLineItemClick: onAddLineItemClick,
+        onCustomerClick: onCustomerClick,
+        onLineItemClick: onLineItemClick
     };
 
-    ko.applyBindings(vm);
-    setTimeout(init, 500);
+    $(function() {
+        ko.applyBindings(vm);
 
-    function init() {
-        $.get(url('load'), function (invoices) {
+        $.get(url(), function (invoices) {
             vm.invoices($.map(invoices, function (invoice) { return ko.mapping.fromJS(invoice); }));
             vm.noInvoicesMessage('No open invoices found');
         });
-    }
+    });
 
-    function addInvoice() {
+    function onAddInvoiceClick() {
         app.post(url('add'), {}, function (invoice) {
             vm.invoices.push(ko.mapping.fromJS(invoice));
             app.logger.info('Added invoice ' + invoice.InvoiceId);
         });
     }
     
-    function deleteInvoice(invoice) {
+    function onDeleteInvoiceClick(invoice) {
         if (!confirm('Permanently delete this invoice?')) return;
 
         app.post(url('remove'), { invoiceId: invoice.InvoiceId() }, function() {
@@ -36,51 +36,31 @@
         });
     }
     
-    function printInvoice(invoice) {
+    function onExportInvoiceClick(invoice) {
         app.logger.info('Coming soon (print invoice ' + invoice.InvoiceId() + ')');
     }
 
-    function addLine(invoice) {
+    function onAddLineItemClick(invoice) {
         app.post(url('addlineitem'), { invoiceId: invoice.InvoiceId() }, function (lineItem) {
             invoice.InvoiceLineItems.push(ko.mapping.fromJS(lineItem));
         });
     }
 
-    function editCustomer(invoice) {
+    function onCustomerClick(invoice) {
+        app.createDialogForm(url('customereditform?invoiceId=' + invoice.InvoiceId()), function(result) {
+            ko.mapping.fromJS(result, {}, invoice.InvoiceCustomer);
+        });
+    }
 
-        var dialog = $('<div>').hide().appendTo($('body'));
-
-        function _onOk() {
-            var data = $.extend({}, { invoiceId: invoice.InvoiceId() }, dialog.find('form').toObject());
-            app.post(url('customereditform'), data, function(result) {
-                if ($(result).is('form')) {
-                    dialog.html(result);
-                } else {
-                    dialog.dialog("close").remove();
-                    ko.mapping.fromJS(result, {}, invoice.InvoiceCustomer);
-                }
-            });
-        }
-
-        dialog
-            .dialog(
-                {
-                    title: 'Customer Information',
-                    modal: true,
-                    width: 'auto',
-                    position: 'top+10%',
-                    buttons: [
-                        { 'text': 'OK', click: _onOk },
-                        { 'text': 'Cancel', click: function() { dialog.dialog("close").remove(); } }
-                    ]
-                })
-            .append($('<p>').text('Loading...'))
-            .load(url('customereditform?invoiceId=' + invoice.InvoiceId()));
-
+    function onLineItemClick(lineItem) {
+        app.logger.logonly(lineItem);
     }
 
     function url(actionAndQuery) {
-        return app.webroot + 'invoices/' + actionAndQuery;
+        var result = app.webroot + 'invoices';
+        if (actionAndQuery && actionAndQuery.length > 0)
+            result += '/' + actionAndQuery;
+        return result;
     }
 
 })(app, jQuery, ko);
