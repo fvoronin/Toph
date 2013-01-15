@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using Toph.Common.DataAccess;
+using Toph.Domain;
+using Toph.Domain.Commands;
 using Toph.Domain.Entities;
 using Toph.UI.Models;
 
@@ -10,14 +12,16 @@ namespace Toph.UI.Controllers
     [Authorize]
     public class InvoicesController : AppController
     {
-        public InvoicesController(IRepository repository, IUnitOfWork uow)
+        public InvoicesController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
         {
             _repository = repository;
+            _commandExecutor = commandExecutor;
             _uow = uow;
         }
 
-        private readonly IRepository _repository;
         private readonly IUnitOfWork _uow;
+        private readonly IRepository _repository;
+        private readonly ICommandExecutor _commandExecutor;
 
         public ActionResult Index()
         {
@@ -100,6 +104,33 @@ namespace Toph.UI.Controllers
             _uow.Commit();
 
             return Json(model);
+        }
+
+        public ActionResult LineItemEditForm(int id)
+        {
+            var lineItem = _repository.Get<InvoiceLineItem>(id);
+            if (!string.Equals(lineItem.Invoice.UserProfile.Username, User.Identity.Name, StringComparison.OrdinalIgnoreCase)) return HttpNotFound();
+
+            return PartialView(new EditInvoiceLineItemCommand(lineItem));
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult LineItemEditForm(EditInvoiceLineItemCommand command)
+        {
+            var lineItem = _repository.Get<InvoiceLineItem>(command.Id);
+            if (!string.Equals(lineItem.Invoice.UserProfile.Username, User.Identity.Name, StringComparison.OrdinalIgnoreCase)) return HttpNotFound();
+
+            var result = _commandExecutor.Execute(command);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return PartialView(command);
+            }
+
+            _uow.Commit();
+
+            return Json(new InvoicesInvoiceModel.LineItem(lineItem));
         }
     }
 }

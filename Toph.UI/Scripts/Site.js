@@ -55,6 +55,48 @@ $.fn.toObject = function () {
 };
 
 
+/******************************************************/
+/******************************************************/
+// knockout extensions
+
+// money
+(function() {
+
+    $.extend(ko.bindingHandlers, {
+        moneyValue: {
+            init: ko.bindingHandlers.value.init,
+            update: function (element, valueAccessor) {
+                var formattedValue = formatValue(valueAccessor);
+                ko.bindingHandlers.value.update(element, function () { return formattedValue; });
+            }
+        },
+        moneyText: {
+            init: ko.bindingHandlers.text.init,
+            update: function (element, valueAccessor) {
+                var formattedValue = formatValue(valueAccessor);
+                ko.bindingHandlers.text.update(element, function () { return formattedValue; });
+            }
+        }
+    });
+    
+    function formatValue(valueAccessor) {
+        var value = parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
+        return '$' + addCommas(value);
+    }
+    
+    function addCommas(value) {
+        var rx = /(\d+)(\d{3})/;
+        return value.replace(/^\d+/, function (w) {
+            while (rx.test(w)) {
+                w = w.replace(rx, '$1,$2');
+            }
+            return w;
+        });
+    }
+
+})();
+
+
 
 /******************************************************/
 /******************************************************/
@@ -69,7 +111,7 @@ app = {
     logger: (function () {
         if (!toastr) throw 'toastr plugin not referenced';
 
-        toastr.options.timeOut = 2000;
+        toastr.options.timeOut = 3000;
         toastr.options.positionClass = 'toast-bottom-right';
 
         return {
@@ -129,12 +171,16 @@ app = {
         };
     })(),
 
-    post: function (url, data, callback) {
-        $.post(url, $.extend({ '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data), function (result) {
-            if (typeof callback === "function") {
-                callback(result);
-            }
-        });
+    post: function(url, data, callback) {
+        return $.post(url, $.extend({ '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data))
+            .success(function(result) {
+                if (typeof callback === "function") {
+                    callback(result);
+                }
+            })
+            .error(function (jqXHR, textStatus, errorThrown) {
+                app.logger.error('Try reloading the page before trying again', errorThrown || textStatus);
+            });
     },
 
     createDialogForm: function(loadUrl, callback) {
@@ -151,7 +197,7 @@ app = {
                 return false;
             }
 
-            app.post(form.attr('action'), form.toObject(), function(result) {
+            app.post(form.attr('action'), form.toObject(), function (result) {
                 if (typeof result == 'string') {
                     _dialog.html(result);
                     reposition();
@@ -173,6 +219,8 @@ app = {
             // forces it to re-position considering any new content
             _dialog.dialog('option', 'position', _dialog.dialog('option', 'position'));
         }
+
+        return _dialog;
     },
 
     Delayed: function (callback, millisecondsToDelay) {

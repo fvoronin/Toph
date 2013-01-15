@@ -17,7 +17,6 @@ namespace Toph.UI.Models
             InvoiceId = invoice.Id;
             InvoiceDate = invoice.InvoiceDate.ToString("MM/dd/yyyy");
             InvoiceNumber = invoice.InvoiceNumber;
-            InvoiceTotal = invoice.GetTotal().ToString("C");
             InvoiceLineItems = invoice.LineItems.Select(x => new LineItem(x)).ToArray();
             InvoiceCustomer = new Customer(invoice.InvoiceCustomer);
         }
@@ -29,9 +28,6 @@ namespace Toph.UI.Models
 
         [Required]
         public string InvoiceNumber { get; set; }
-
-        [Required]
-        public string InvoiceTotal { get; set; }
 
         public Customer InvoiceCustomer { get; set; }
 

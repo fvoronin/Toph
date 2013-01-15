@@ -73,6 +73,9 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="LowercaseRoutesMVC4">
       <HintPath>..\packages\LowercaseRoutesMVC4.0.4.1\lib\LowercaseRoutesMVC4.dll</HintPath>
     </Reference>
@@ -314,6 +317,7 @@
     <Content Include="Views\Shared\EditorTemplates\password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\string.cshtml" />
     <Content Include="Views\Home\_InvoiceTemplate.cshtml" />
+    <Content Include="Views\Invoices\LineItemEditForm.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

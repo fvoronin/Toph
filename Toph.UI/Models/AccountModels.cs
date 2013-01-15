@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Toph.Domain.Services;
+using Toph.Domain.Commands;
 
 namespace Toph.UI.Models
 {

@@ -18,10 +18,10 @@ namespace Toph.Domain.Entities
         }
 
         public virtual Invoice Invoice { get; protected set; }
-        public virtual DateTimeOffset LineItemDate { get; protected set; }
-        public virtual string Description { get; protected set; }
-        public virtual double Quantity { get; protected set; }
-        public virtual double Price { get; protected set; }
+        public virtual DateTimeOffset LineItemDate { get; protected internal set; }
+        public virtual string Description { get; protected internal set; }
+        public virtual double Quantity { get; protected internal set; }
+        public virtual double Price { get; protected internal set; }
 
         public virtual double GetTotal()
         {

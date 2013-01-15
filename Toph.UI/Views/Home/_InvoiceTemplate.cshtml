@@ -21,18 +21,18 @@
             <tr>
                 <th>Date</th>
                 <th style="width: 99%;">Description</th>
-                <th>Quantity</th>
-                <th>Amount</th>
-                <th>Total</th>
+                <th style="text-align: right;">Quantity</th>
+                <th style="text-align: right;">Amount</th>
+                <th style="text-align: right;">Total</th>
             </tr>
         </thead>
         <tbody data-bind="foreach: InvoiceLineItems">
             <tr data-bind="click: $root.onLineItemClick" class="clickable">
                 <td data-bind="text: LineItemDate"></td>
                 <td data-bind="text: Description" style="width: 99%;"></td>
-                <td data-bind="text: Quantity"></td>
-                <td data-bind="text: Price"></td>
-                <td data-bind="text: LineItemTotal"></td>
+                <td data-bind="text: Quantity" style="text-align: right;"></td>
+                <td data-bind="text: Price" style="text-align: right;"></td>
+                <td data-bind="text: LineItemTotal" style="text-align: right;"></td>
             </tr>
         </tbody>
         <tfoot>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </td>
-                <td data-bind="text: InvoiceTotal" style="font-weight: bold;"></td>
+                <td data-bind="moneyText: InvoiceTotal" style="font-weight: bold; text-align: right;"></td>
             </tr>
         </tfoot>
     </table>

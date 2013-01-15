@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Toph.Common;
 using WebMatrix.WebData;
+using log4net.Config;
 
 namespace Toph.UI
 {
@@ -15,6 +16,8 @@ namespace Toph.UI
     {
         protected void Application_Start()
         {
+            XmlConfigurator.Configure();
+
             var version = Assembly
                 .GetExecutingAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()

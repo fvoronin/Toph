@@ -57,7 +57,10 @@ table { border-collapse: collapse; border-spacing: 0; }
 /* forms */
 form ol { list-style: none; padding: 0; }
 form ol li { padding: 0; margin-bottom: 10px; }
-form ol li input[type="text"], form ol li input[type="password"], form ol li textarea { width: 90%; padding: 0.4em; border: solid 1px #aaa; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
+form ol li input[type="text"],
+form ol li input[type="date"],
+form ol li input[type="password"],
+form ol li textarea { width: 90%; padding: 0.4em; border: solid 1px #aaa; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 form ol li input.input-validation-error { border: 1px solid #e80c4d !important; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
 form .validation-summary-valid { display: none; }

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using StructureMap;
 using Toph.Common;
 using Toph.Common.DataAccess;
+using Toph.Domain;
 using Toph.UI.Infrastructure;
 
 namespace Toph.UI
@@ -25,6 +26,7 @@ namespace Toph.UI
                 {
                     scan.AssembliesFromApplicationBaseDirectory(assembly => assembly.FullName.StartsWith("Toph"));
                     scan.WithDefaultConventions();
+                    scan.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<>));
                 });
             });
 

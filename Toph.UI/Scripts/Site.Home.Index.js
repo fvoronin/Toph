@@ -15,14 +15,14 @@
         ko.applyBindings(vm);
 
         $.get(url(), function (invoices) {
-            vm.invoices($.map(invoices, function (invoice) { return ko.mapping.fromJS(invoice); }));
+            vm.invoices($.map(invoices, extendInvoice));
             vm.noInvoicesMessage('No open invoices found');
         });
     });
 
     function onAddInvoiceClick() {
         app.post(url('add'), {}, function (invoice) {
-            vm.invoices.push(ko.mapping.fromJS(invoice));
+            vm.invoices.push(extendInvoice(invoice));
             app.logger.info('Added invoice ' + invoice.InvoiceId);
         });
     }
@@ -53,7 +53,24 @@
     }
 
     function onLineItemClick(lineItem) {
-        app.logger.logonly(lineItem);
+        app.createDialogForm(url('LineItemEditForm/' + lineItem.LineItemId()), function(result) {
+            ko.mapping.fromJS(result, {}, lineItem);
+        });
+    }
+
+
+    function extendInvoice(invoice) {
+        invoice = ko.mapping.fromJS(invoice);
+
+        invoice.InvoiceTotal = ko.computed(function() {
+            var total = 0.0;
+            $.each(invoice.InvoiceLineItems(), function () {
+                total += parseFloat(this.LineItemTotal().replace(/[^-.\d]/g, ''));
+            });
+            return total;
+        });
+
+        return invoice;
     }
 
     function url(actionAndQuery) {

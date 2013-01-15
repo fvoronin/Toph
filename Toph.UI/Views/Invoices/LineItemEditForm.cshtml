@@ -1,0 +1,34 @@
+﻿@model EditInvoiceLineItemCommand
+
+@using (Html.BeginForm())
+{
+    <h3>Customer Information</h3>
+
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.Version)
+
+    <ol>
+        <li>
+            @Html.LabelFor(x => x.Date)
+            @Html.EditorFor(x => x.Date)
+        </li>
+        <li>
+            @Html.LabelFor(x => x.Description)
+            @Html.EditorFor(x => x.Description)
+        </li>
+        <li>
+            @Html.LabelFor(x => x.Quantity)
+            @Html.EditorFor(x => x.Quantity)
+        </li>
+        <li>
+            @Html.LabelFor(x => x.Price)
+            @Html.EditorFor(x => x.Price)
+        </li>
+    </ol>
+
+    <input type="submit" value="Done" />
+
+    @Html.ValidationSummary()
+}
+
+<script> $('form #Date').datepicker(); </script>

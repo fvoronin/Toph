@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
-using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
 using Toph.Common.DataAccess;
-using Toph.Domain.Services;
+using Toph.Domain;
+using Toph.Domain.Commands;
 using Toph.UI.Models;
 using WebMatrix.WebData;
 
@@ -15,14 +15,14 @@ namespace Toph.UI.Controllers
     [Authorize]
     public class AccountController : AppController
     {
-        public AccountController(IUnitOfWork unitOfWork, IUserService userService)
+        public AccountController(IUnitOfWork unitOfWork, ICommandExecutor commandExecutor)
         {
             _unitOfWork = unitOfWork;
-            _userService = userService;
+            _commandExecutor = commandExecutor;
         }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserService _userService;
+        private readonly ICommandExecutor _commandExecutor;
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -61,24 +61,18 @@ namespace Toph.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var serviceResult = _userService.Execute(new AddUserCommand {Username = model.Username});
+                var result = _commandExecutor.Execute<AddUserCommand>(model);
 
-                    if (serviceResult.AnyErrors())
-                        ModelState.AddModelErrors(serviceResult);
-                    else
-                    {
-                        _unitOfWork.Commit();
-
-                        WebSecurity.CreateAccount(model.Username, model.Password);
-                        WebSecurity.Login(model.Username, model.Password);
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                catch (MembershipCreateUserException e)
+                if (result.AnyErrors())
+                    ModelState.AddModelErrors(result);
+                else
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                    _unitOfWork.Commit();
+
+                    WebSecurity.CreateAccount(model.Username, model.Password);
+                    WebSecurity.Login(model.Username, model.Password);
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
 
@@ -222,7 +216,7 @@ namespace Toph.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                var serviceResult = _userService.Execute(new AddUserCommand {Username = model.Username});
+                var serviceResult = _commandExecutor.Execute<AddUserCommand>(model);
 
                 if (serviceResult.AnyErrors())
                     ModelState.AddModelErrors(serviceResult);
@@ -293,44 +287,6 @@ namespace Toph.UI.Controllers
             if (username.IndexOf('.') >= 0) username = username.Substring(0, username.IndexOf('.'));
 
             return Regex.Replace(username, "[^A-Za-z0-9-]", "-");
-        }
-
-        private string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
         }
 
         public enum ManageMessageId

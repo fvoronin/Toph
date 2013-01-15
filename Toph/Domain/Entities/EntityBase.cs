@@ -5,6 +5,6 @@ namespace Toph.Domain.Entities
 {
     public abstract class EntityBase : Entity<int>
     {
-        public virtual int Version { get; protected internal set; }
+        public virtual int Version { get; protected set; }
     }
 }
