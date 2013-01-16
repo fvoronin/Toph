@@ -78,7 +78,7 @@ html, body { position: relative; }
 html { height: 100%; }
 body { min-height: 100%; }
 html, body { margin: 0; border: 0; padding: 0; }
-body { background: none repeat scroll 0 0 #fff; font: .875em/1.2 "Hoefler Text", "Times New Roman", Times, serif; }
+body { background: #fff none repeat scroll 0 0; line-height: 1.2; font-size: .875em; font-family: helvetica,arial,sans-serif; }
 h1 { font-size: 2em; margin: 0.67em 0; }
 h2 { font-size: 1.5em; margin: 0.83em 0; }
 h3 { font-size: 1.17em; margin: 1em 0; }
@@ -98,7 +98,7 @@ a, a:visited { color: #5c80b1; }
 .pg-inner { padding: 0 15px; }
 
 #pg-header header { float: left; }
-#pg-header nav { float: right; margin: 1.2em 0; font-family: helvetica, sans-serif; font-size: .8em; text-transform: lowercase; }
+#pg-header nav { float: right; margin: 1.2em 0; font-size: .8em; text-transform: lowercase; }
 #pg-header nav ul { margin: 0; padding: 0; list-style: none; }
 #pg-header nav ul li { display: inline; }
 #pg-header nav ul li a { display: block; float: left; padding: 3px 10px 3px 0; }
