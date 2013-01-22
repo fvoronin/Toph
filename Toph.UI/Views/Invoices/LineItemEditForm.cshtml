@@ -27,6 +27,7 @@
     </ol>
 
     <input type="submit" value="Done" />
+    <input type="button" value="Delete" onclick="$(this).trigger('delete');" style="float: right;" />
 
     @Html.ValidationSummary()
 }

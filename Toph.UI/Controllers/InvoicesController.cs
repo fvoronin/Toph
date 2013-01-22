@@ -77,6 +77,19 @@ namespace Toph.UI.Controllers
             return Json(new InvoicesInvoiceModel.LineItem(lineItem));
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult DeleteLineItem(int id)
+        {
+            var lineItem = _repository.Get<InvoiceLineItem>(id);
+            if (!string.Equals(lineItem.Invoice.UserProfile.Username, User.Identity.Name, StringComparison.OrdinalIgnoreCase)) return HttpNotFound();
+
+            lineItem.Invoice.Remove(lineItem);
+
+            _uow.Commit();
+
+            return Json(new InvoicesInvoiceModel.LineItem(lineItem));
+        }
+
         public ActionResult CustomerEditForm(int invoiceId)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);

@@ -53,8 +53,16 @@
     }
 
     function onLineItemClick(lineItem) {
-        app.createDialogForm(url('LineItemEditForm/' + lineItem.LineItemId()), function(result) {
+        var dialog = app.createDialogForm(url('LineItemEditForm/' + lineItem.LineItemId()), function(result) {
             ko.mapping.fromJS(result, {}, lineItem);
+        }).on('delete', function (e) {
+            e.preventDefault();
+
+            dialog.dialog('close');
+            lineItem.Invoice.InvoiceLineItems.remove(lineItem);
+            app.post(url('deletelineitem'), { id: lineItem.LineItemId() });
+
+            return false;
         });
     }
 
@@ -68,6 +76,10 @@
                 total += parseFloat(this.LineItemTotal().replace(/[^-.\d]/g, ''));
             });
             return total;
+        });
+
+        $.each(invoice.InvoiceLineItems(), function (index, lineItem) {
+            lineItem.Invoice = invoice;
         });
 
         return invoice;
